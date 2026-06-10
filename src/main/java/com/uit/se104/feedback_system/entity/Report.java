@@ -15,6 +15,10 @@ import com.uit.se104.feedback_system.entity.enums.ExportType;
 
 public class Report extends BaseEntity {
 
+    @Id
+    @Column(name = "report_id", nullable = false)
+    private String reportId;
+
     @Column(nullable = false)
     private String title;
 

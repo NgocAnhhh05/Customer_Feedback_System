@@ -26,7 +26,7 @@ public class Manager extends User {
 
     @Column(name = "manage_department", nullable = false)
     @Enumerated(EnumType.STRING)
-    private ManagerDepartment manageDepartment;
+    private ManagerDepartment managerDepartment;
 
     @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Report> generatedReport = new ArrayList<>();

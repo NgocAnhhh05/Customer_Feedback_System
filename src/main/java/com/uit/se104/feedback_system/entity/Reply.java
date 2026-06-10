@@ -14,6 +14,10 @@ import lombok.experimental.SuperBuilder;
 
 public class Reply extends BaseEntity{
 
+    @Id
+    @Column(name = "reply_id", nullable = false)
+    private String replyId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feedback_id", nullable = false)
     private Feedback feedback;

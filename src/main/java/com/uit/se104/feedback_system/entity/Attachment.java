@@ -14,6 +14,9 @@ import com.uit.se104.feedback_system.entity.enums.AttachmentType;
 @Table(name = "attachment")
 
 public class Attachment extends BaseEntity{
+    @Id
+    @Column(name = "attachment_id", nullable = false)
+    private String attachmentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feedback_id", nullable = false)
