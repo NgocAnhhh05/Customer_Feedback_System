@@ -26,7 +26,7 @@ public class Attachment extends BaseEntity{
     private String filePath;
 
     @Column(name = "file_size", nullable = false)
-    private String fileSize;
+    private Long fileSize;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "file_type", nullable = false)

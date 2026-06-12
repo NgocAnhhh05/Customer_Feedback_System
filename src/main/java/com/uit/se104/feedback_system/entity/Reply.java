@@ -28,6 +28,6 @@ public class Reply extends BaseEntity{
     private Admin admin;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String context;
+    private String content;
 
 }

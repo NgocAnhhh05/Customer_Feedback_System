@@ -12,10 +12,10 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, String>{
     Optional<User> findByEmailIgnoreCase(String email);
-    Optional<User> findByNameIgnoreCase(String nam);
+    // Optional<User> findByNameIgnoreCase(String name);
 
     boolean existsByEmailIgnoreCase(String email);
-    boolean existsBynameIgnoreCase(String username);
+    // boolean existsByNameIgnoreCase(String name);
 
     List<User> findAllByRole(RoleType role);
 
