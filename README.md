@@ -44,7 +44,8 @@ spring.jpa.show-sql=true
 
 ```
 
-> ⚠️ **Lưu ý quan trọng cho Linh và Hoàng:** > Nếu lúc cài PostgreSQL trên máy các bạn, các bạn lỡ đặt mật khẩu Admin khác `123456` (ví dụ: `chucmungnammoi`, `root`, `123`), các bạn có thể sửa tạm dòng `spring.datasource.password` thành mật khẩu máy mình để chạy. **Tuy nhiên, khi commit/push lên GitHub, tuyệt đối không commit file thay đổi mật khẩu này lên để tránh bị xung đột code với cả nhóm **
+> ⚠️ **Lưu ý quan trọng:** > Nếu lúc cài PostgreSQL trên máy các bạn, các bạn lỡ đặt mật khẩu Admin khác `123456` (ví dụ: `chucmungnammoi`, `root`, `123`), các bạn có thể sửa tạm dòng `spring.datasource.password` thành mật khẩu máy mình để chạy.
+> **Tuy nhiên, khi commit/push lên GitHub, tuyệt đối không commit file thay đổi mật khẩu này lên để tránh bị xung đột code với cả nhóm **
 
 ---
 
@@ -84,7 +85,7 @@ Các bạn sử dụng thông tin sau để điền vào request Login trên Pos
 
 * **Username:** `root_manager`
 * **Password:** `ManagerPassword123!`
-* **Quyền hạn (Role):** `ROLE_MANAGER`
+* **Quyền hạn (Role):** `MANAGER`
 
 ---
 
