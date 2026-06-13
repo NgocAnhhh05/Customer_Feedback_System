@@ -9,12 +9,14 @@ import com.uit.se104.feedback_system.exception.*;
 import com.uit.se104.feedback_system.repository.FeedbackRepository;
 import com.uit.se104.feedback_system.repository.UserRepository;
 import com.uit.se104.feedback_system.repository.CustomerRepository;
-
+import com.uit.se104.feedback_system.repository.AttachmentRepository;
+import com.uit.se104.feedback_system.entity.enums.AttachmentType;
 
 import com.uit.se104.feedback_system.mapper.EntityMapper;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,19 +26,28 @@ public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
+    private final AttachmentRepository attachmentRepository;
+    private final FileStorageService fileStorageService;
 
 
-    public FeedbackService(FeedbackRepository feedbackRepository, UserRepository userRepository, CustomerRepository customerRepository, UserResponse userResponse){
+    public FeedbackService(FeedbackRepository feedbackRepository,
+                     UserRepository userRepository,
+                     CustomerRepository customerRepository,
+                     AttachmentRepository attachmentRepository,
+                     FileStorageService fileStorageService){
         this.feedbackRepository = feedbackRepository;
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
+        this.attachmentRepository = attachmentRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     // customer send a feedback
     @Transactional
-    public FeedbackResponse createFeedback(FeedbackCreateRequest request, String customerId){
+    public FeedbackResponse createFeedback(FeedbackCreateRequest request, String customerId, MultipartFile[] files){
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer not found with Id: " + customerId));
 
+        // 1. create and save feedback first
         Feedback feedback = Feedback.builder()
             .feedbackId(UUID.randomUUID().toString().replace("-", ""))
             .customer(customer)
@@ -47,6 +58,28 @@ public class FeedbackService {
             .build();
 
         Feedback savedFeedback = feedbackRepository.save(feedback);
+
+        // 2. handle attachments if any
+        if (files != null && files.length > 0){
+            for (MultipartFile file : files){
+                if (!file.isEmpty()){
+                    // save relativePath
+                    String relativePath = fileStorageService.storeFile(file);
+
+                    // save file type
+                    AttachmentType type = file.getContentType().equals("application/pdf") ? AttachmentType.PDF : AttachmentType.IMAGE;
+
+                    Attachment attachment = Attachment.builder()
+                        .attachmentId(UUID.randomUUID().toString().replace("-", ""))
+                        .feedback(savedFeedback)
+                        .filePath(relativePath)
+                        .fileSize(file.getSize())
+                        .fileType(type)
+                        .build();
+                    attachmentRepository.save(attachment);
+                }
+            }
+        }
         return EntityMapper.toFeedbackResponse(savedFeedback);
     }
 

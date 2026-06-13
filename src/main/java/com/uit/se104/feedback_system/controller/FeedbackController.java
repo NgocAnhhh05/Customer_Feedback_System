@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.uit.se104.feedback_system.dto.feedback.*;
 import com.uit.se104.feedback_system.entity.enums.*;
@@ -14,7 +15,7 @@ import com.uit.se104.feedback_system.service.FeedbackService;
 @RestController
 @RequestMapping("/api/feedbacks")
 public class FeedbackController {
-    
+
     private final FeedbackService feedbackService;
 
     public FeedbackController(FeedbackService feedbackService){
@@ -28,10 +29,11 @@ public class FeedbackController {
      */
     @PostMapping
     public ResponseEntity<FeedbackResponse> createFeedback(
-        @Valid @RequestBody FeedbackCreateRequest request,
+        @RequestPart("feedback") @Valid FeedbackCreateRequest request, // Json object feedback
+        @RequestPart(value = "files", required = false) MultipartFile[] files, // attached files
         @RequestHeader("X-Customer-Id") String customerId // Chuẩn hóa tên Header
     ){
-        FeedbackResponse feedback = feedbackService.createFeedback(request, customerId);
+        FeedbackResponse feedback = feedbackService.createFeedback(request, customerId, files);
         return new ResponseEntity<>(feedback, HttpStatus.CREATED);
     }
 
@@ -60,7 +62,7 @@ public class FeedbackController {
         List<FeedbackResponse> responses = feedbackService.getAllFeedbacks(keyword);
         return ResponseEntity.ok(responses);
     }
-    
+
     // Note nghiệp vụ:
     // 1. Phân loại phản hồi do khách hàng tự chọn khi tạo -> không tách riêng thành 1 api độc lập.
     // 2. Trạng thái phản hồi (Status) tự động cập nhật sang IN_PROGRESS/RESOLVED sau khi có phản hồi hệ thống -> xử lý ngầm ở tầng Service của Reply.
