@@ -8,7 +8,7 @@ import java.util.List;
 
 
 import com.uit.se104.feedback_system.entity.enums.ManagementLevel;
-import com.uit.se104.feedback_system.entity.enums.ManagerDepartment;
+import com.uit.se104.feedback_system.entity.enums.ManageDepartment;
 
 @Entity
 @Table(name = "manager")
@@ -26,7 +26,7 @@ public class Manager extends User {
 
     @Column(name = "manage_department", nullable = false)
     @Enumerated(EnumType.STRING)
-    private ManagerDepartment managerDepartment;
+    private ManageDepartment manageDepartment;
 
     @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Report> generatedReport = new ArrayList<>();

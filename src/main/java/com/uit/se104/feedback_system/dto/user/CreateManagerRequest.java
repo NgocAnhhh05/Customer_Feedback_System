@@ -1,7 +1,7 @@
 package com.uit.se104.feedback_system.dto.user;
 
 import com.uit.se104.feedback_system.entity.enums.ManagementLevel;
-import com.uit.se104.feedback_system.entity.enums.ManagerDepartment;
+import com.uit.se104.feedback_system.entity.enums.ManageDepartment;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,6 +26,6 @@ public record CreateManagerRequest(
         ManagementLevel managementLevel,
 
         @NotNull(message = "Department is required")
-        ManagerDepartment managerDepartment
+        ManageDepartment manageDepartment
 
 ) {}

@@ -54,8 +54,8 @@ public class ManagerService {
                 request.managementLevel()
         );
 
-        manager.setManagerDepartment(
-                request.managerDepartment()
+        manager.setManageDepartment(
+                request.manageDepartment()
         );
 
         return EntityMapper.toManagerResponse(

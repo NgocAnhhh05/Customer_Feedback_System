@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.uit.se104.feedback_system.entity.enums.RoleType;
 import com.uit.se104.feedback_system.repository.ManagerRepository;
 import com.uit.se104.feedback_system.entity.Manager;
+import com.uit.se104.feedback_system.entity.enums.*;
 
 @SpringBootApplication
 public class FeedbackSystemApplication {
@@ -27,7 +28,9 @@ public class FeedbackSystemApplication {
                         .name("root_manager")
                         .password(passwordEncoder.encode("ManagerPassword123!"))
                         .email("manager.system@uit.edu.vn")
-                        .role(RoleType.MANAGER) 
+                        .role(RoleType.MANAGER)
+                        .manageDepartment(ManageDepartment.CUSTOMER_SERVICE)
+                        .managementLevel(ManagementLevel.LEAD)
                         .build();
                 managerRepository.save(defaultManager);
                 System.out.println(">>> Default Manager account created: root_manager / ManagerPassword123!");

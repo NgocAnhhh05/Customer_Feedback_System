@@ -112,7 +112,7 @@ public final class EntityMapper {
             manager.getName(),
             manager.getEmail(),
             manager.getManagementLevel(),
-            manager.getManagerDepartment()
+            manager.getManageDepartment()
         );
     }
 
