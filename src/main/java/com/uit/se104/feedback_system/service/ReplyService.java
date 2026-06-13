@@ -9,12 +9,12 @@ import com.uit.se104.feedback_system.repository.ReplyRepository;
 import com.uit.se104.feedback_system.repository.FeedbackRepository;
 
 import com.uit.se104.feedback_system.repository.UserRepository;
-
 import com.uit.se104.feedback_system.mapper.EntityMapper;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 /*
@@ -57,4 +57,11 @@ public class ReplyService {
 
         return EntityMapper.toReplyResponse(savedReply);
     }
+
+    @Transactional
+    public List<ReplyResponse> getRepliesByFeedbackId(String feedbackId){
+        List<Reply> replies = replyRepository.findByFeedback_FeedbackIdOrderByCreatedAtDesc(feedbackId);
+        return replies.stream().map(EntityMapper::toReplyResponse).toList();
+    }
+
 }
