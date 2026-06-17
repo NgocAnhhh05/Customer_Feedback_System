@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Roadmap</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #93a5ff; 
+            --light-blue-bg: #e6edff;
+            --dark-text: #333333;
+            --gray-text: #888888;
+            --border-color: #e0e0e0;
+            --bg-color: #f9f9f9;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ----- HEADER ----- */
+        .header-container {
+            background-color: white;
+            padding: 0.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-spacer { width: 120px; }
+
+        .nav-pills .nav-link {
+            color: var(--dark-text);
+            font-weight: 500;
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+        }
+
+        .nav-pills .nav-link:hover { background-color: #f0f0f0; }
+        
+        .nav-pills .nav-link.active {
+            background-color: var(--light-blue-bg);
+            color: #333;
+        }
+
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark-text);
+            font-weight: 500;
+            text-decoration: none;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.4rem;
+            transition: background-color 0.2s;
+        }
+
+        .user-profile-btn:hover {
+            background-color: var(--light-blue-bg);
+        }
+
+        .avatar-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+            background-color: #5dade2;
+        }
+
+        /* ----- BỘ LỌC ----- */
+        .filter-input, .filter-dropdown {
+            border: 1px solid var(--border-color);
+            border-radius: 0.4rem;
+            padding: 0.6rem 1rem;
+            background-color: white;
+            color: var(--gray-text);
+        }
+        
+        .filter-dropdown {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 140px;
+            justify-content: space-between;
+        }
+        
+        .filter-input:focus {
+            box-shadow: none;
+            border-color: var(--primary-blue);
+        }
+        .dropdown-toggle::after { display: none; }
+
+        /* ----- KANBAN BOARD ----- */
+        .roadmap-container {
+            margin-top: 2rem;
+        }
+
+        .column-header {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dot-blue { color: #5dade2; font-size: 1.2rem; }
+        .dot-yellow { color: #f4d03f; font-size: 1.2rem; }
+        .dot-green { color: #58d68d; font-size: 1.2rem; }
+
+        /* Card Lộ Trình */
+        .roadmap-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.6rem;
+            margin-bottom: 1rem;
+            display: flex;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .roadmap-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-color: var(--primary-blue);
+        }
+
+        .card-main-content {
+            flex: 1;
+            padding: 1.25rem;
+        }
+
+        .card-vote-score {
+            width: 70px;
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #555;
+            background-color: #fafafa;
+            border-radius: 0 0.6rem 0.6rem 0;
+        }
+
+        .title-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .meta-text {
+            font-size: 0.85rem;
+            color: var(--gray-text);
+        }
+
+        .meta-highlight {
+            color: var(--primary-blue);
+            font-weight: 600;
+            background-color: var(--light-blue-bg);
+            padding: 0.1rem 0.4rem;
+            border-radius: 0.2rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER HOÀN CHỈNH -->
+    <header class="header-container mb-4">
+        <div class="header-spacer"></div>
+        
+        <ul class="nav nav-pills align-items-center">
+            <li class="nav-item">
+                <!-- Chuyển về Bảng phản hồi -->
+                <a class="nav-link" href="bang-phan-hoi.html">Bảng phản hồi</a>
+            </li>
+            <li class="nav-item">
+                <!-- Đang ở Lộ trình thì sáng màu -->
+                <a class="nav-link active" href="quan-ly-roadmap.html">Lộ trình sản phẩm</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+                </a>
+            </li>
+        </ul>
+
+        <!-- CHUYỂN VỀ PROFILE KHI BẤM VÀO AVATAR -->
+        <a href="user-profile.html" class="user-profile-btn">
+            <div class="avatar-circle">VT</div>
+            <span>Vũ Tiến</span>
+        </a>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <div class="container-fluid px-4 px-lg-5 mb-5">
+        
+        <!-- Thanh công cụ lọc -->
+        <div class="d-flex flex-wrap gap-3">
+            <input type="text" class="form-control filter-input flex-grow-1" placeholder="Tìm kiếm" style="max-width: 300px;">
+            
+            <div class="dropdown">
+                <div class="filter-dropdown dropdown-toggle" data-bs-toggle="dropdown">
+                    Trạng thái <i class="bi bi-chevron-down text-secondary"></i>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <div class="filter-dropdown dropdown-toggle" data-bs-toggle="dropdown">
+                    Bình chọn nhiều <i class="bi bi-chevron-down text-secondary"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- LƯỚI KANBAN -->
+        <div class="row roadmap-container">
+            
+            <!-- CỘT 1: Đang xem xét -->
+            <div class="col-lg-4 mb-4">
+                <div class="column-header">
+                    <i class="bi bi-circle-fill dot-blue"></i> Đang xem xét
+                </div>
+                
+                <a href="chi-tiet-feedback.html" class="roadmap-card">
+                    <div class="card-main-content">
+                        <h6 class="title-text">Cần thêm tính năng Dark Mode cho ứng dụng</h6>
+                        <div class="meta-text mt-2">7 tháng trước</div>
+                    </div>
+                    <div class="card-vote-score">60</div>
+                </a>
+
+                <a href="chi-tiet-feedback.html" class="roadmap-card">
+                    <div class="card-main-content">
+                        <h6 class="title-text">Tích hợp đăng nhập bằng tài khoản Google & Facebook</h6>
+                        <div class="meta-text"><span class="meta-highlight">Dự kiến:</span> Q4 / 2024</div>
+                        <div class="meta-text mt-1">3 tháng trước</div>
+                    </div>
+                    <div class="card-vote-score">57</div>
+                </a>
+
+                <a href="chi-tiet-feedback.html" class="roadmap-card">
+                    <div class="card-main-content">
+                        <h6 class="title-text">Thêm biểu đồ thống kê tương tác vào Dashboard</h6>
+                        <div class="meta-text mt-2">8 tháng trước</div>
+                    </div>
+                    <div class="card-vote-score">23</div>
+                </a>
+            </div>
+
+            <!-- CỘT 2: Đang thực hiện -->
+            <div class="col-lg-4 mb-4">
+                <div class="column-header">
+                    <i class="bi bi-circle-fill dot-yellow"></i> Đang thực hiện
+                </div>
+                
+                <a href="chi-tiet-feedback.html" class="roadmap-card">
+                    <div class="card-main-content">
+                        <h6 class="title-text">Cải thiện tốc độ load của trang Lộ trình sản phẩm</h6>
+                        <div class="meta-text"><span class="meta-highlight">Đang triển khai:</span> Sprint 42</div>
+                        <div class="meta-text mt-1">11 tháng trước</div>
+                    </div>
+                    <div class="card-vote-score">26</div>
+                </a>
+            </div>
+
+            <!-- CỘT 3: Đã hoàn thành -->
+            <div class="col-lg-4 mb-4">
+                <div class="column-header">
+                    <i class="bi bi-circle-fill dot-green"></i> Đã hoàn thành
+                </div>
+                
+                <a href="chi-tiet-feedback.html" class="roadmap-card">
+                    <div class="card-main-content">
+                        <h6 class="title-text">Lỗi không thể tải ảnh PNG lên ở mục báo cáo lỗi</h6>
+                        <div class="meta-text"><span class="meta-highlight">Đã phát hành:</span> v2.1.0</div>
+                        <div class="meta-text mt-1">1 năm trước</div>
+                    </div>
+                    <div class="card-vote-score">45</div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

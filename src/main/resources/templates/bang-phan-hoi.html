@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Feedback</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #93a5ff; 
+            --primary-blue-hover: #7b91ff;
+            --light-blue-bg: #e6edff;
+            --dark-text: #333333;
+            --gray-text: #888888;
+            --border-color: #e0e0e0;
+            --bg-color: #f9f9f9;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* ----- HEADER ----- */
+        .header-container {
+            background-color: white;
+            padding: 0.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-spacer { width: 120px; }
+
+        .nav-pills .nav-link {
+            color: var(--dark-text);
+            font-weight: 500;
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+        }
+
+        .nav-pills .nav-link:hover { background-color: #f0f0f0; }
+        .nav-pills .nav-link.active {
+            background-color: var(--light-blue-bg);
+            color: #333;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark-text);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* ----- AVATAR MÀU SẮC ----- */
+        .avatar-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        
+        .avt-blue { background-color: #5dade2; }
+        .avt-orange { background-color: #eb984e; }
+        .avt-green { background-color: #58d68d; }
+        .avt-purple { background-color: #af7ac5; }
+
+        /* ----- BUTTONS (Cột phải) ----- */
+        .btn-write-feedback {
+            background-color: var(--primary-blue);
+            color: white;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            padding: 0.8rem;
+            border: none;
+            transition: all 0.2s;
+            text-decoration: none; /* Vì đổi thành thẻ a */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-write-feedback:hover {
+            background-color: var(--primary-blue-hover);
+            color: white;
+        }
+
+        .btn-my-feedback {
+            background-color: var(--light-blue-bg);
+            color: #555;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            padding: 0.8rem;
+            border: 1px solid var(--primary-blue);
+            transition: all 0.2s;
+        }
+
+        .btn-my-feedback:hover { background-color: #d8e2ff; }
+
+        /* ----- BỘ LỌC ----- */
+        .filter-input, .filter-dropdown {
+            border: 1px solid var(--border-color);
+            border-radius: 0.4rem;
+            padding: 0.6rem 1rem;
+            background-color: white;
+            color: var(--gray-text);
+        }
+        
+        .filter-dropdown {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 140px;
+            justify-content: space-between;
+        }
+        
+        .filter-input:focus {
+            box-shadow: none;
+            border-color: var(--primary-blue);
+        }
+        .dropdown-toggle::after { display: none; }
+
+        /* ----- FEEDBACK CARD (Có Link) ----- */
+        .feedback-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block; /* Ép thẻ a chiếm toàn khối */
+        }
+        
+        .feedback-card-link:hover {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .feedback-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .feedback-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-color: var(--primary-blue);
+        }
+
+        .card-main-content {
+            flex: 1;
+            padding: 1.5rem;
+        }
+
+        .card-vote-score {
+            width: 80px;
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #555;
+            background-color: #fafafa;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        .title-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-blue-hover);
+        }
+
+        .tag-new {
+            background-color: var(--light-blue-bg);
+            color: #555;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            margin-left: 0.5rem;
+            font-weight: normal;
+        }
+
+        .desc-text {
+            color: var(--gray-text);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+        
+        .post-time {
+            color: #aaa;
+            font-size: 0.75rem;
+        }
+
+        /* ----- ACTIONS TRONG CARD ----- */
+        .btn-vote-small {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 0.3rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.85rem;
+            position: relative;
+            z-index: 2; /* Để bấm không bị nhảy trang */
+        }
+        
+        .btn-vote-small:active {
+            transform: scale(0.95);
+        }
+
+        .status-badge {
+            border: 1px solid var(--border-color);
+            color: var(--gray-text);
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.3rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background-color: white;
+        }
+
+        .action-text {
+            color: #aaa;
+            font-size: 0.75rem;
+            text-align: right;
+            margin-bottom: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. HEADER CHUẨN -->
+    <header class="header-container mb-4">
+        <div class="header-spacer"></div>
+        
+        <ul class="nav nav-pills align-items-center">
+            <!-- Thêm tab Quản trị viên (mặc định ẩn bằng style="display: none;") -->
+            <li class="nav-item" id="adminTabItem" style="display: none;">
+                <a class="nav-link" href="admin-tong-quan.html">Quản trị viên</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="bang-phan-hoi.html">Bảng phản hồi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="quan-ly-roadmap.html">Lộ trình sản phẩm</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+                </a>
+            </li>
+        </ul>
+
+        <a href="user-profile.html" class="user-profile text-decoration-none">
+            <div class="avatar-circle avt-blue">VT</div>
+            <span>Vũ Tiến</span>
+        </a>
+    </header>
+
+    <!-- 2. MAIN LAYOUT -->
+    <div class="container-fluid px-4 px-lg-5">
+        <div class="row">
+            
+            <!-- CỘT TRÁI -->
+            <div class="col-lg-8">
+                
+                <!-- Thanh công cụ lọc -->
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <input type="text" class="form-control filter-input flex-grow-1" placeholder="Tìm kiếm" style="max-width: 300px;">
+                    
+                    <div class="dropdown">
+                        <div class="filter-dropdown dropdown-toggle" data-bs-toggle="dropdown">
+                            Trạng thái <i class="bi bi-chevron-down text-secondary"></i>
+                        </div>
+                        <ul class="dropdown-menu shadow-sm border-0">
+                            <li><a class="dropdown-item" href="#">Tất cả</a></li>
+                            <li><a class="dropdown-item" href="#">Đang xem xét</a></li>
+                            <li><a class="dropdown-item" href="#">Đang thực hiện</a></li>
+                            <li><a class="dropdown-item" href="#">Đã hoàn thành</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="dropdown">
+                        <div class="filter-dropdown dropdown-toggle" data-bs-toggle="dropdown">
+                            Bình chọn nhiều <i class="bi bi-chevron-down text-secondary"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 1: Link tới Chi tiết -->
+                <a href="chi-tiet-feedback.html" class="feedback-card-link">
+                    <div class="feedback-card">
+                        <div class="card-main-content">
+                            <div class="d-flex align-items-center">
+                                <h5 class="title-text mb-0">Cần thêm tính năng Dark Mode cho ứng dụng</h5>
+                                <span class="tag-new">Phản hồi mới</span>
+                            </div>
+                            <p class="desc-text">Mình thường xuyên sử dụng ứng dụng vào ban đêm. Việc màn hình luôn hiển thị nền trắng chói lóa làm mình rất mỏi mắt...</p>
+                            
+                            <div class="action-text"><i class="bi bi-arrow-return-left"></i> Trả lời phản hồi</div>
+                            
+                            <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-circle avt-blue">VT</div>
+                                    <div>
+                                        <p class="user-name">Vũ Tiến</p>
+                                        <p class="post-time mb-0">5 tháng trước</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="text-secondary"><i class="bi bi-chat-square-text"></i> 10</span>
+                                    <!-- Nút bình chọn có logic JS nhỏ -->
+                                    <button class="btn-vote-small" onclick="handleVote(event, this)">Bình chọn</button>
+                                    <div class="status-badge">
+                                        <i class="bi bi-search text-secondary"></i> Đang xem xét
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-vote-score vote-count-display">12</div>
+                    </div>
+                </a>
+
+                <!-- CARD 2 -->
+                <a href="chi-tiet-feedback.html" class="feedback-card-link">
+                    <div class="feedback-card">
+                        <div class="card-main-content">
+                            <div class="d-flex align-items-center">
+                                <h5 class="title-text mb-0">Lỗi không thể tải ảnh lên ở mục báo cáo</h5>
+                            </div>
+                            <p class="desc-text">Hôm qua tôi cố gắng tải một file ảnh định dạng PNG dung lượng khoảng 2MB nhưng hệ thống liên tục báo lỗi kết nối...</p>
+                            
+                            <div class="action-text"><i class="bi bi-check2-all"></i> Đã trả lời</div>
+                            
+                            <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-circle avt-orange">ND</div>
+                                    <div>
+                                        <p class="user-name">Nguyễn Dũng</p>
+                                        <p class="post-time mb-0">5 ngày trước</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="text-secondary"><i class="bi bi-chat-square-text"></i> 5</span>
+                                    <button class="btn-vote-small" onclick="handleVote(event, this)">Bình chọn</button>
+                                    <div class="status-badge">
+                                        <i class="bi bi-check-lg text-secondary"></i> Đã hoàn thành
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-vote-score vote-count-display">25</div>
+                    </div>
+                </a>
+
+                <!-- CARD 3 -->
+                <a href="chi-tiet-feedback.html" class="feedback-card-link">
+                    <div class="feedback-card">
+                        <div class="card-main-content">
+                            <div class="d-flex align-items-center">
+                                <h5 class="title-text mb-0">Cải thiện tốc độ load của trang Lộ trình</h5>
+                            </div>
+                            <p class="desc-text">Trang Lộ trình mỗi lần bấm vào phải đợi gần 3 giây mới load xong dữ liệu. Team check lại xem có thể tối ưu được không.</p>
+                            
+                            <div class="action-text"><i class="bi bi-check2-all"></i> Đã trả lời</div>
+                            
+                            <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-circle avt-green">HT</div>
+                                    <div>
+                                        <p class="user-name">Hoàng Tuấn</p>
+                                        <p class="post-time mb-0">1 tháng trước</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="text-secondary"><i class="bi bi-chat-square-text"></i> 3</span>
+                                    <button class="btn-vote-small" onclick="handleVote(event, this)">Bình chọn</button>
+                                    <div class="status-badge">
+                                        <i class="bi bi-arrow-clockwise text-secondary"></i> Đang thực hiện
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-vote-score vote-count-display">19</div>
+                    </div>
+                </a>
+
+            </div> 
+
+            <!-- CỘT PHẢI -->
+            <div class="col-lg-4 ps-lg-4 mt-4 mt-lg-0">
+                <!-- Nút Viết phản hồi Link tới form -->
+                <a href="them-feedback.html" class="btn-write-feedback w-100 mb-3">
+                    <i class="bi bi-plus-lg"></i> Viết phản hồi
+                </a>
+                <button class="btn-my-feedback w-100 d-flex justify-content-center align-items-center gap-2">
+                    <i class="bi bi-person"></i> Phản hồi của tôi
+                </button>
+            </div> 
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Đoạn JS thần thánh để tạo "sức sống" -->
+    <script>
+        function handleVote(event, buttonElement) {
+            // Ngăn việc click nút bấm kích hoạt thẻ a (nhảy trang)
+            event.preventDefault(); 
+            
+            // Tìm ô hiển thị điểm số chung hàng với nút vừa bấm
+            let cardElement = buttonElement.closest('.feedback-card');
+            let scoreElement = cardElement.querySelector('.vote-count-display');
+            
+            // Đổi màu nút để giả vờ là đã vote
+            if(buttonElement.style.backgroundColor !== 'gray'){
+                let currentScore = parseInt(scoreElement.innerText);
+                scoreElement.innerText = currentScore + 1; // Cộng 1 điểm
+                
+                buttonElement.style.backgroundColor = 'gray';
+                buttonElement.innerText = 'Đã vote';
+            }
+        }
+
+        // JS Giả lập kiểm tra Role để hiện tab Admin
+        document.addEventListener("DOMContentLoaded", function() {
+            // Đổi "ADMIN" thành "CUSTOMER" ở dòng dưới nếu m muốn test thử góc nhìn của khách hàng
+            const userRole = localStorage.getItem("userRole") || "ADMIN"; 
+            const adminTab = document.getElementById("adminTabItem");
+
+            if (adminTab) {
+                if (userRole === "ADMIN" || userRole === "MANAGER") {
+                    adminTab.style.display = "block"; // Hiện tab lên
+                } else {
+                    adminTab.style.display = "none"; // Giữ nguyên trạng thái ẩn
+                }
+            }
+        });
+    </script>
+</body>
+</html>

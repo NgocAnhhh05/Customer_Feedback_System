@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Feedback</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #93a5ff; 
+            --primary-blue-hover: #7b91ff;
+            --light-blue-bg: #e6edff;
+            --dark-text: #333333;
+            --gray-text: #888888;
+            --border-color: #e0e0e0;
+            --bg-color: #f9f9f9;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* ----- HEADER CHUNG ----- */
+        .header-container {
+            background-color: white;
+            padding: 0.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-spacer { width: 120px; }
+
+        .nav-pills .nav-link {
+            color: var(--dark-text);
+            font-weight: 500;
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+        }
+
+        .nav-pills .nav-link:hover { background-color: #f0f0f0; }
+        .nav-pills .nav-link.active {
+            background-color: var(--light-blue-bg);
+            color: #333;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark-text);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* ----- CỘT TRÁI (Nội dung chính) ----- */
+        .content-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feedback-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-blue-hover);
+            margin-bottom: 0.5rem;
+        }
+
+        .feedback-desc {
+            color: var(--gray-text);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .feedback-image {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* --- Bình luận --- */
+        .comment-section {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        .sort-dropdown {
+            border: 1px solid var(--border-color);
+            border-radius: 0.3rem;
+            padding: 0.3rem 0.8rem;
+            background-color: white;
+            color: var(--gray-text);
+            font-size: 0.9rem;
+        }
+
+        .comment-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .comment-text {
+            margin-left: 45px; /* Thụt lùi so với avatar */
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-actions {
+            margin-left: 45px;
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .action-btn {
+            border: 1px solid var(--border-color);
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.3rem;
+            color: var(--gray-text);
+            cursor: pointer;
+            background: none;
+        }
+        .action-btn:hover { background-color: var(--bg-color); }
+
+        .comment-input-area {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+        }
+
+        .comment-input {
+            border: none;
+            resize: none;
+            outline: none;
+            width: 100%;
+            padding: 0.5rem 0;
+        }
+
+        .btn-send {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 0.3rem;
+            padding: 0.4rem 1rem;
+            font-weight: 500;
+        }
+
+        /* ----- CỘT PHẢI (Thông tin) ----- */
+        .info-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .info-label {
+            width: 100px;
+            color: var(--gray-text);
+            font-size: 0.95rem;
+        }
+
+        .info-value {
+            color: var(--dark-text);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* --- Avatars có màu --- */
+        .avatar-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        
+        .avt-blue { background-color: #5dade2; }
+        .avt-orange { background-color: #eb984e; }
+        .avt-green { background-color: #58d68d; }
+        .avt-purple { background-color: #af7ac5; }
+        .avt-pink { background-color: #f1948a; }
+
+        /* --- Badge trạng thái --- */
+        .status-badge {
+            border: 1px solid var(--border-color);
+            color: var(--gray-text);
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.3rem;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background-color: white;
+        }
+
+        /* Khu vực người bình chọn */
+        .voter-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .show-more-voters {
+            font-size: 0.8rem;
+            color: var(--gray-text);
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER (Liên kết về Bảng phản hồi) -->
+    <header class="header-container mb-4">
+        <div class="header-spacer"></div>
+        
+        <ul class="nav nav-pills align-items-center">
+            <li class="nav-item">
+                <a class="nav-link active" href="bang-phan-hoi.html">Bảng phản hồi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Lộ trình sản phẩm</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+                </a>
+            </li>
+        </ul>
+
+        <div class="user-profile">
+            <div class="avatar-circle avt-blue">VT</div>
+            <span>Vũ Tiến</span>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <div class="container-fluid px-4 px-lg-5">
+        <!-- Nút Back -->
+        <a href="bang-phan-hoi.html" class="text-decoration-none text-secondary mb-3 d-inline-block">
+            <i class="bi bi-arrow-left"></i> Quay lại danh sách
+        </a>
+
+        <div class="row">
+            <!-- CỘT TRÁI: Chi tiết & Comment -->
+            <div class="col-lg-8">
+                
+                <div class="content-card">
+                    <h2 class="feedback-title">Cần thêm tính năng Dark Mode cho ứng dụng</h2>
+                    <p class="feedback-desc">Mình thường xuyên sử dụng ứng dụng vào ban đêm. Việc màn hình luôn hiển thị nền trắng chói lóa làm mình rất mỏi mắt. Hi vọng team phát triển sớm bổ sung giao diện Tối (Dark Mode) để cải thiện trải nghiệm người dùng. Cảm ơn team!</p>
+                    
+                    <!-- Hình ảnh minh họa có màu -->
+                    <img src="https://images.unsplash.com/photo-1555680202-c86f0e12f086?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Minh họa Dark Mode" class="feedback-image">
+                </div>
+
+                <div class="comment-section">
+                    <div class="d-flex justify-content-end mb-4">
+                        <div class="dropdown">
+                            <button class="sort-dropdown dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Mới nhất <i class="bi bi-chevron-down ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Comment Item -->
+                    <div class="comment-item">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="avatar-circle avt-orange">ND</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-medium">Nguyễn Dũng</span>
+                                <span class="text-secondary" style="font-size: 0.8rem;">1 ngày trước</span>
+                            </div>
+                        </div>
+                        <p class="comment-text">Hoàn toàn đồng ý! Tính năng này rất cần thiết cho sức khỏe mắt.</p>
+                        <div class="comment-actions">
+                            <button class="action-btn"><i class="bi bi-heart"></i> 5</button>
+                            <button class="action-btn"><i class="bi bi-reply"></i> Trả lời</button>
+                        </div>
+                    </div>
+
+                    <!-- Input Comment -->
+                    <div class="comment-input-area">
+                        <div class="flex-grow-1">
+                            <textarea class="comment-input" rows="1" placeholder="Viết bình luận..."></textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-light border"><i class="bi bi-image text-secondary"></i></button>
+                            <button class="btn-send">Gửi</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div> <!-- Hết cột trái -->
+
+            <!-- CỘT PHẢI: Thông tin Meta -->
+            <div class="col-lg-4 ps-lg-4 mt-4 mt-lg-0">
+                
+                <div class="info-card">
+                    <div class="info-row">
+                        <div class="info-label">Tác giả</div>
+                        <div class="info-value d-flex align-items-center gap-2">
+                            <div class="avatar-circle avt-blue" style="width: 25px; height: 25px; font-size: 0.7rem;">VT</div>
+                            <span>Vũ Tiến</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">Ngày tạo</div>
+                        <div class="info-value text-secondary">5 tháng trước</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Trạng thái</div>
+                        <div class="info-value">
+                            <div class="status-badge">
+                                <i class="bi bi-arrow-clockwise text-secondary"></i> Đang thực hiện
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Tiến hành</div>
+                        <div class="info-value">Tháng 10/2025</div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <p class="text-secondary mb-3">Người bình chọn (12)</p>
+                    <div class="voter-list">
+                        <div class="avatar-circle avt-green">HT</div>
+                        <div class="avatar-circle avt-purple">LM</div>
+                        <div class="avatar-circle avt-pink">PA</div>
+                        <div class="avatar-circle avt-blue">TQ</div>
+                        <div class="avatar-circle avt-orange">KV</div>
+                        <div class="avatar-circle avt-green">DH</div>
+                    </div>
+                    <div class="show-more-voters mt-2">Hiển thị thêm...</div>
+                </div>
+
+            </div> <!-- Hết cột phải -->
+
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
