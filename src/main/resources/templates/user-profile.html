@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Hệ Thống Phản Hồi</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #93a5ff; 
+            --primary-blue-hover: #7b91ff;
+            --light-blue-bg: #e6edff;
+            --dark-text: #333333;
+            --gray-text: #888888;
+            --border-color: #e0e0e0;
+            --bg-color: #f9f9f9;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* ----- HEADER ----- */
+        .header-container {
+            background-color: white;
+            padding: 0.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-spacer { width: 120px; }
+
+        .nav-pills .nav-link {
+            color: var(--dark-text);
+            font-weight: 500;
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+        }
+
+        .nav-pills .nav-link:hover { background-color: #f0f0f0; }
+
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark-text);
+            font-weight: 500;
+            text-decoration: none;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.4rem;
+            transition: background-color 0.2s;
+        }
+
+        .user-profile-btn:hover {
+            background-color: var(--light-blue-bg);
+            color: var(--dark-text);
+        }
+
+        .avatar-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .avt-blue { background-color: #5dade2; }
+
+        /* ----- MAIN CONTENT ----- */
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+            color: var(--dark-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.8rem;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .profile-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #5dade2; /* Giữ màu xanh của User */
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .profile-email {
+            color: var(--gray-text);
+            margin-bottom: 0.8rem;
+        }
+
+        .post-count-badge {
+            display: inline-block;
+            border: 1px solid var(--border-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.4rem;
+            font-size: 0.85rem;
+            color: var(--gray-text);
+        }
+
+        /* Action Buttons trong Profile */
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            min-width: 200px;
+        }
+
+        .btn-profile {
+            padding: 0.6rem 1rem;
+            border-radius: 0.4rem;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-edit-profile {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+        }
+        .btn-edit-profile:hover { background-color: var(--primary-blue-hover); color: white; }
+
+        .btn-outline-custom {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            color: var(--primary-blue);
+        }
+        .btn-outline-custom:hover { background-color: var(--light-blue-bg); }
+
+        /* ----- FEEDBACK CARD LIST ----- */
+        .feedback-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .card-main-content {
+            flex: 1;
+            padding: 1.5rem;
+        }
+
+        .card-vote-score {
+            width: 80px;
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #555;
+            background-color: #fafafa;
+        }
+
+        .title-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .desc-text {
+            color: var(--gray-text);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-action-small {
+            border: 1px solid var(--border-color);
+            background-color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.3rem;
+            font-size: 0.85rem;
+            color: var(--gray-text);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.2s;
+        }
+
+        .btn-action-small:hover { background-color: var(--bg-color); }
+        
+        .btn-action-blue { color: var(--primary-blue); border-color: var(--light-blue-bg); }
+        .btn-action-blue:hover { background-color: var(--light-blue-bg); }
+        
+        .btn-action-red { color: #e74c3c; border-color: #fadbd8; }
+        .btn-action-red:hover { background-color: #fadbd8; }
+
+        .btn-vote-filled {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 0.3rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        .status-badge {
+            border: 1px solid var(--border-color);
+            color: var(--gray-text);
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.3rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header-container">
+        <div class="header-spacer"></div>
+        
+        <ul class="nav nav-pills align-items-center">
+            <li class="nav-item">
+                <a class="nav-link" href="bang-phan-hoi.html">Bảng phản hồi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Lộ trình sản phẩm</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+                </a>
+            </li>
+        </ul>
+
+        <!-- Đã click được để F5 lại chính trang này -->
+        <a href="user-profile.html" class="user-profile-btn">
+            <div class="avatar-circle avt-blue">VT</div>
+            <span>Vũ Tiến</span>
+        </a>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <div class="container-fluid px-4 px-lg-5 max-w-1200" style="max-width: 1000px; margin: 0 auto;">
+        
+        <h3 class="section-title">Tài khoản của tôi</h3>
+        
+        <div class="profile-card">
+            <div class="profile-info">
+                <div class="profile-avatar-large">VT</div>
+                <div>
+                    <h2 class="profile-name">Vũ Tiến</h2>
+                    <p class="profile-email">tienvu.design@email.com</p>
+                    <span class="post-count-badge">12 bài đăng</span>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <button class="btn-profile btn-edit-profile"><i class="bi bi-pencil"></i> Chỉnh sửa</button>
+                <button class="btn-profile btn-outline-custom"><i class="bi bi-bell"></i> Thông báo</button>
+                <!-- NÚT ĐĂNG XUẤT CHUYỂN VỀ TRANG CHỦ -->
+                <a href="trang-chu.html" class="btn-profile btn-outline-custom"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
+            </div>
+        </div>
+
+        <h3 class="section-title"><i class="bi bi-card-text text-primary" style="color: var(--primary-blue) !important;"></i> Phản hồi của tôi</h3>
+
+        <!-- BÀI PHẢN HỒI CỦA USER NÀY -->
+        <div class="feedback-card">
+            <div class="card-main-content">
+                <h5 class="title-text">Cần thêm tính năng Dark Mode cho ứng dụng</h5>
+                <p class="desc-text">Mình thường xuyên sử dụng ứng dụng vào ban đêm. Việc màn hình luôn hiển thị nền trắng chói lóa làm mình rất mỏi mắt...</p>
+                
+                <div class="action-text text-end mb-2 text-secondary" style="font-size: 0.75rem;"><i class="bi bi-check2-all"></i> Đã trả lời</div>
+                
+                <div class="d-flex justify-content-between align-items-center border-top pt-3 flex-wrap gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="avatar-circle avt-blue" style="width: 28px; height: 28px; font-size: 0.7rem;">VT</div>
+                        <div>
+                            <span class="user-name" style="font-size: 0.85rem;">Vũ Tiến</span>
+                            <span class="text-secondary ms-2" style="font-size: 0.75rem;">5 tháng trước</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-2">
+                        <!-- CÁC NÚT THAO TÁC CÁ NHÂN -->
+                        <button class="btn-action-small btn-action-red"><i class="bi bi-trash"></i> Xóa</button>
+                        
+                        <!-- NÚT CHUYỂN QUA MÀN HÌNH SỬA -->
+                        <a href="sua-feedback.html" class="btn-action-small btn-action-blue"><i class="bi bi-pencil"></i> Chỉnh sửa</a>
+                        
+                        <span class="text-secondary mx-2"><i class="bi bi-chat-square-text"></i> 5</span>
+                        <button class="btn-vote-filled">Bình chọn</button>
+                        <div class="status-badge">
+                            <i class="bi bi-check-lg text-secondary"></i> Đã hoàn thành
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-vote-score">25</div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

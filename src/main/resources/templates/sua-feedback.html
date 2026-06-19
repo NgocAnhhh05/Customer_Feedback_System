@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sửa Phản Hồi</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #93a5ff; 
+            --primary-blue-hover: #7b91ff;
+            --light-blue-bg: #e6edff;
+            --dark-text: #333333;
+            --gray-text: #888888;
+            --border-color: #e0e0e0;
+            --bg-color: #f9f9f9;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* ----- HEADER ----- */
+        .header-container {
+            background-color: white;
+            padding: 0.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-spacer { width: 120px; }
+
+        .nav-pills .nav-link {
+            color: var(--dark-text);
+            font-weight: 500;
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+        }
+
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark-text);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .avatar-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+            background-color: #5dade2;
+        }
+
+        /* ----- FORM BÊN TRONG ----- */
+        .form-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.8rem;
+            padding: 2.5rem;
+            max-width: 800px;
+            margin: 2rem auto; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--dark-text);
+        }
+
+        .custom-input {
+            border: 1px solid var(--primary-blue);
+            border-radius: 0.5rem;
+            padding: 0.8rem 1rem;
+            background-color: #fbfcff; 
+            font-weight: 500;
+        }
+        
+        .custom-input:focus {
+            box-shadow: 0 0 0 0.2rem rgba(147, 165, 255, 0.25);
+            border-color: var(--primary-blue-hover);
+        }
+
+        .custom-textarea {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.8rem 1rem;
+            resize: vertical;
+            min-height: 200px;
+            line-height: 1.6;
+        }
+
+        .custom-textarea:focus {
+            box-shadow: none;
+            border-color: var(--primary-blue);
+        }
+
+        /* Khu vực ảnh đã upload */
+        .uploaded-image-preview {
+            position: relative;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        .uploaded-image-preview img {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 0.4rem;
+            border: 1px solid var(--border-color);
+        }
+        .btn-remove-image {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        /* Nút hành động */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-upload {
+            border: 1px solid var(--border-color);
+            color: var(--primary-blue);
+            background-color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 0.4rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-upload:hover { background-color: var(--light-blue-bg); }
+
+        .btn-cancel {
+            border: 1px solid var(--border-color);
+            color: var(--primary-blue);
+            background-color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 0.4rem;
+            font-weight: 500;
+            text-decoration: none; 
+            transition: all 0.2s;
+        }
+        .btn-cancel:hover { background-color: #f0f0f0; }
+
+        .btn-submit {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 0.6rem 2rem;
+            border-radius: 0.4rem;
+            font-weight: 500;
+            border: none;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-submit:hover { background-color: var(--primary-blue-hover); color: white;}
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header-container">
+        <div class="header-spacer"></div>
+        
+        <ul class="nav nav-pills align-items-center">
+            <li class="nav-item">
+                <a class="nav-link" href="bang-phan-hoi.html">Bảng phản hồi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="quan-ly-roadmap.html">Lộ trình sản phẩm</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+                </a>
+            </li>
+        </ul>
+
+        <!-- CHUYỂN VỀ PROFILE -->
+        <a href="user-profile.html" class="user-profile-btn">
+            <div class="avatar-circle">VT</div>
+            <span>Vũ Tiến</span>
+        </a>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <div class="container-fluid px-4 px-lg-5">
+        
+        <div class="form-card">
+            <h2 class="form-title">Sửa phản hồi</h2>
+            
+            <form>
+                <div class="mb-4">
+                    <!-- Thuộc tính value dùng để điền sẵn dữ liệu cũ -->
+                    <input type="text" class="form-control custom-input" value="Cần thêm tính năng Dark Mode cho ứng dụng" placeholder="Tiêu đề phản hồi">
+                </div>
+                
+                <div class="mb-3">
+                    <!-- Text nằm giữa thẻ textarea sẽ hiển thị làm nội dung cũ -->
+                    <textarea class="form-control custom-textarea" placeholder="Chi tiết phản hồi">Mình thường xuyên sử dụng ứng dụng vào ban đêm. Việc màn hình luôn hiển thị nền trắng chói lóa làm mình rất mỏi mắt. Hi vọng team phát triển sớm bổ sung giao diện Tối (Dark Mode) để cải thiện trải nghiệm người dùng. Cảm ơn team!</textarea>
+                </div>
+
+                <!-- Giả lập việc đã có 1 tấm ảnh đính kèm từ trước -->
+                <div class="uploaded-image-preview">
+                    <img src="https://images.unsplash.com/photo-1555680202-c86f0e12f086?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Ảnh đính kèm">
+                    <button type="button" class="btn-remove-image" title="Xóa ảnh"><i class="bi bi-x"></i></button>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-upload">
+                        <i class="bi bi-plus-lg"></i> Thêm ảnh khác
+                    </button>
+                    
+                    <div class="d-flex gap-2">
+                        <!-- CẢ 2 NÚT ĐỀU QUAY VỀ PROFILE -->
+                        <a href="user-profile.html" class="btn-cancel">Hủy</a>
+                        <a href="user-profile.html" class="btn-submit">Hoàn tất</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
