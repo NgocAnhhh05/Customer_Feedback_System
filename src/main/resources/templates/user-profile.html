@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    
+
     <style>
         :root {
-            --primary-blue: #93a5ff; 
+            --primary-blue: #93a5ff;
             --primary-blue-hover: #7b91ff;
             --light-blue-bg: #e6edff;
             --dark-text: #333333;
@@ -228,13 +228,14 @@
             align-items: center;
             gap: 0.3rem;
             transition: all 0.2s;
+            cursor: pointer;
         }
 
         .btn-action-small:hover { background-color: var(--bg-color); }
-        
+
         .btn-action-blue { color: var(--primary-blue); border-color: var(--light-blue-bg); }
         .btn-action-blue:hover { background-color: var(--light-blue-bg); }
-        
+
         .btn-action-red { color: #e74c3c; border-color: #fadbd8; }
         .btn-action-red:hover { background-color: #fadbd8; }
 
@@ -262,94 +263,128 @@
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header class="header-container">
-        <div class="header-spacer"></div>
-        
-        <ul class="nav nav-pills align-items-center">
-            <li class="nav-item">
-                <a class="nav-link" href="bang-phan-hoi.html">Bảng phản hồi</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Lộ trình sản phẩm</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                    Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
-                </a>
-            </li>
-        </ul>
+<!-- HEADER -->
+<header class="header-container">
+    <div class="header-spacer"></div>
 
-        <!-- Đã click được để F5 lại chính trang này -->
-        <a href="user-profile.html" class="user-profile-btn">
-            <div class="avatar-circle avt-blue">VT</div>
-            <span>Vũ Tiến</span>
-        </a>
-    </header>
+    <ul class="nav nav-pills align-items-center">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/bang-phan-hoi}">Bảng phản hồi</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/quan-ly-roadmap}">Lộ trình sản phẩm</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+            </a>
+        </li>
+    </ul>
 
-    <!-- NỘI DUNG CHÍNH -->
-    <div class="container-fluid px-4 px-lg-5 max-w-1200" style="max-width: 1000px; margin: 0 auto;">
-        
-        <h3 class="section-title">Tài khoản của tôi</h3>
-        
-        <div class="profile-card">
-            <div class="profile-info">
-                <div class="profile-avatar-large">VT</div>
-                <div>
-                    <h2 class="profile-name">Vũ Tiến</h2>
-                    <p class="profile-email">tienvu.design@email.com</p>
-                    <span class="post-count-badge">12 bài đăng</span>
-                </div>
-            </div>
-            
-            <div class="profile-actions">
-                <button class="btn-profile btn-edit-profile"><i class="bi bi-pencil"></i> Chỉnh sửa</button>
-                <button class="btn-profile btn-outline-custom"><i class="bi bi-bell"></i> Thông báo</button>
-                <!-- NÚT ĐĂNG XUẤT CHUYỂN VỀ TRANG CHỦ -->
-                <a href="trang-chu.html" class="btn-profile btn-outline-custom"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
+    <a th:href="@{/user-profile}" class="user-profile-btn">
+        <div class="avatar-circle avt-blue">VT</div>
+        <span>Vũ Tiến</span>
+    </a>
+</header>
+
+<!-- NỘI DUNG CHÍNH -->
+<div class="container-fluid px-4 px-lg-5 max-w-1200" style="max-width: 1000px; margin: 0 auto;">
+
+    <h3 class="section-title">Tài khoản của tôi</h3>
+
+    <div class="profile-card">
+        <div class="profile-info">
+            <div class="profile-avatar-large">VT</div>
+            <div>
+                <h2 class="profile-name">Vũ Tiến</h2>
+                <p class="profile-email">tienvu.design@email.com</p>
+                <span class="post-count-badge">12 bài đăng</span>
             </div>
         </div>
 
-        <h3 class="section-title"><i class="bi bi-card-text text-primary" style="color: var(--primary-blue) !important;"></i> Phản hồi của tôi</h3>
-
-        <!-- BÀI PHẢN HỒI CỦA USER NÀY -->
-        <div class="feedback-card">
-            <div class="card-main-content">
-                <h5 class="title-text">Cần thêm tính năng Dark Mode cho ứng dụng</h5>
-                <p class="desc-text">Mình thường xuyên sử dụng ứng dụng vào ban đêm. Việc màn hình luôn hiển thị nền trắng chói lóa làm mình rất mỏi mắt...</p>
-                
-                <div class="action-text text-end mb-2 text-secondary" style="font-size: 0.75rem;"><i class="bi bi-check2-all"></i> Đã trả lời</div>
-                
-                <div class="d-flex justify-content-between align-items-center border-top pt-3 flex-wrap gap-2">
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="avatar-circle avt-blue" style="width: 28px; height: 28px; font-size: 0.7rem;">VT</div>
-                        <div>
-                            <span class="user-name" style="font-size: 0.85rem;">Vũ Tiến</span>
-                            <span class="text-secondary ms-2" style="font-size: 0.75rem;">5 tháng trước</span>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex align-items-center gap-2">
-                        <!-- CÁC NÚT THAO TÁC CÁ NHÂN -->
-                        <button class="btn-action-small btn-action-red"><i class="bi bi-trash"></i> Xóa</button>
-                        
-                        <!-- NÚT CHUYỂN QUA MÀN HÌNH SỬA -->
-                        <a href="sua-feedback.html" class="btn-action-small btn-action-blue"><i class="bi bi-pencil"></i> Chỉnh sửa</a>
-                        
-                        <span class="text-secondary mx-2"><i class="bi bi-chat-square-text"></i> 5</span>
-                        <button class="btn-vote-filled">Bình chọn</button>
-                        <div class="status-badge">
-                            <i class="bi bi-check-lg text-secondary"></i> Đã hoàn thành
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-vote-score">25</div>
+        <div class="profile-actions">
+            <button class="btn-profile btn-edit-profile"><i class="bi bi-pencil"></i> Chỉnh sửa</button>
+            <button class="btn-profile btn-outline-custom"><i class="bi bi-bell"></i> Thông báo</button>
+            <!-- NÚT ĐĂNG XUẤT CHUYỂN VỀ TRANG CHỦ -->
+            <a th:href="@{/}" class="btn-profile btn-outline-custom"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
         </div>
-
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <h3 class="section-title"><i class="bi bi-card-text text-primary" style="color: var(--primary-blue) !important;"></i> Phản hồi của tôi</h3>
+
+    <!-- BÀI PHẢN HỒI CỦA USER NÀY -->
+    <div class="feedback-card">
+        <div class="card-main-content">
+            <h5 class="title-text">Cần thêm tính năng Dark Mode cho ứng dụng</h5>
+            <p class="desc-text">Mình thường xuyên sử dụng ứng dụng vào ban đêm. Việc màn hình luôn hiển thị nền trắng chói lóa làm mình rất mỏi mắt...</p>
+
+            <div class="action-text text-end mb-2 text-secondary" style="font-size: 0.75rem;"><i class="bi bi-check2-all"></i> Đã trả lời</div>
+
+            <div class="d-flex justify-content-between align-items-center border-top pt-3 flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="avatar-circle avt-blue" style="width: 28px; height: 28px; font-size: 0.7rem;">VT</div>
+                    <div>
+                        <span class="user-name" style="font-size: 0.85rem;">Vũ Tiến</span>
+                        <span class="text-secondary ms-2" style="font-size: 0.75rem;">5 tháng trước</span>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <!-- NÚT XÓA KÍCH HOẠT JAVASCRIPT -->
+                    <button class="btn-action-small btn-action-red btn-delete-feedback"><i class="bi bi-trash"></i> Xóa</button>
+
+                    <!-- NÚT CHUYỂN QUA MÀN HÌNH SỬA -->
+                    <a th:href="@{/sua-feedback}" class="btn-action-small btn-action-blue"><i class="bi bi-pencil"></i> Chỉnh sửa</a>
+
+                    <span class="text-secondary mx-2"><i class="bi bi-chat-square-text"></i> 5</span>
+                    <button class="btn-vote-filled">Bình chọn</button>
+                    <div class="status-badge">
+                        <i class="bi bi-check-lg text-secondary"></i> Đã hoàn thành
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-vote-score">25</div>
+    </div>
+
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- SCRIPT GỌI API XÓA KÈM CUSTOM HEADER -->
+<script>
+    document.querySelectorAll('.btn-delete-feedback').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Chặn reload trang
+
+            // Hiển thị hộp thoại xác nhận trước khi xóa
+            if(confirm("Bạn có chắc chắn muốn xóa phản hồi này không? Hành động này không thể hoàn tác.")) {
+
+                // Gọi API xóa feedback
+                fetch('/api/feedback/1', { // Giả sử phản hồi này có ID = 1
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Customer-Id': 'CUST_001' // Gắn Header định danh người dùng
+                    }
+                })
+                    .then(response => {
+                        if(response.ok) {
+                            alert("Đã xóa phản hồi thành công!");
+                            // Xóa luôn cái khung HTML (card) chứa bài viết này ra khỏi màn hình
+                            this.closest('.feedback-card').remove();
+                        } else {
+                            alert("Có lỗi xảy ra, không thể xóa!");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi kết nối API:', error);
+                        alert("Không thể kết nối tới Server Backend.");
+                    });
+            }
+        });
+    });
+</script>
 </body>
 </html>

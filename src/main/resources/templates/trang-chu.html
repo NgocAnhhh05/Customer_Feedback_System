@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -138,7 +138,7 @@
         <div class="right-menu">
             <a href="#" class="login-text-link">Đăng Nhập</a>
             <!-- LINK TỚI TRANG ĐĂNG KÝ -->
-            <a href="dang-ky.html" class="btn-brand-primary">Đăng Ký</a>
+            <a th:href="@{/dang-ky}" class="btn-brand-primary">Đăng Ký</a>
         </div>
     </header>
 
@@ -151,7 +151,7 @@
                 <h1 class="hero-title">Lắng nghe khách hàng, cải thiện sản phẩm</h1>
                 <p class="hero-subtitle">Thu thập những phản hồi quan trọng. Xây dựng những gì người dùng thực sự mong muốn.</p>
                 <!-- LINK TỚI TRANG ĐĂNG KÝ -->
-                <a href="dang-ky.html" class="btn-brand-primary" style="padding: 0.8rem 2rem; font-size: 1.1rem;">Bắt đầu</a>
+                <a th:href="@{/dang-ky}" class="btn-brand-primary">Bắt đầu</a>
             </div>
 
             <!-- Cột phải: Khung đăng nhập -->

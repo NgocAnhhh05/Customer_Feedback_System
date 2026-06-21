@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,12 +38,12 @@
     <header class="header-container">
         <div style="width:120px"></div>
         <ul class="nav nav-pills">
-            <li class="nav-item"><a class="nav-link active" href="admin-tong-quan.html">Quản trị viên</a></li>
-            <li class="nav-item"><a class="nav-link" href="bang-phan-hoi.html">Bảng phản hồi</a></li>
-            <li class="nav-item"><a class="nav-link" href="quan-ly-roadmap.html">Lộ trình sản phẩm</a></li>
+            <li class="nav-item"><a class="nav-link active" th:href="@{/admin-tong-quan}">Quản trị viên</a></li>
+            <li class="nav-item"><a class="nav-link" >Bảng phản hồi</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/quan-ly-roadmap}">Lộ trình sản phẩm</a></li>
             <li class="nav-item"><a class="nav-link" href="#">Tài nguyên</a></li>
         </ul>
-        <a href="user-profile.html" class="text-decoration-none d-flex align-items-center gap-2 text-dark fw-medium">
+        <a th:href="@{/user-profile}" class="text-decoration-none d-flex align-items-center gap-2 text-dark fw-medium">
             <div style="width:35px; height:35px; background:#5dade2; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center;">VT</div>
             <span>Vũ Tiến</span>
         </a>
@@ -51,9 +51,9 @@
 
     <div class="admin-wrapper">
         <nav class="sidebar">
-            <a href="admin-tong-quan.html" class="sidebar-link"><i class="bi bi-grid-1x2"></i> Tổng quan</a>
-            <a href="admin-quan-ly-feedback.html" class="sidebar-link active"><i class="bi bi-chat-left-text"></i> Quản lý phản hồi</a>
-            <a href="admin-quan-ly-user.html" class="sidebar-link"><i class="bi bi-people"></i> Quản lý người dùng</a>
+            <a th:href="@{/admin-tong-quan}" class="sidebar-link"><i class="bi bi-grid-1x2"></i> Tổng quan</a>
+            <a th:href="@{/admin-quan-ly-feedback}" class="sidebar-link active"><i class="bi bi-chat-left-text"></i> Quản lý phản hồi</a>
+            <a th:href="@{/admin-quan-ly-user}" class="sidebar-link"><i class="bi bi-people"></i> Quản lý người dùng</a>
         </nav>
 
         <main class="main-content">
