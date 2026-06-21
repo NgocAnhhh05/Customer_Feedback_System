@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -372,5 +372,37 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Bắt sự kiện cho nút Gửi Bình luận
+        document.querySelector('.btn-send').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const commentText = document.querySelector('.comment-input').value;
+            if (!commentText.trim()) {
+                alert("Vui lòng nhập nội dung bình luận!");
+                return;
+            }
+
+            fetch('/api/feedback/comment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Customer-Id': 'CUST_001' // Header bắt buộc
+                },
+                body: JSON.stringify({
+                    content: commentText
+                })
+            })
+                .then(response => {
+                    if(response.ok) {
+                        alert("Đã gửi bình luận!");
+                        document.querySelector('.comment-input').value = ""; // Xóa trắng ô nhập sau khi gửi
+                    }
+                })
+                .catch(error => console.error('Lỗi gửi comment:', error));
+        });
+    </script>
+
 </body>
 </html>

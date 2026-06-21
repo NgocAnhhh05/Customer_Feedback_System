@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -257,5 +257,39 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Bắt sự kiện khi bấm nút Hoàn tất (nút có class btn-submit)
+        document.querySelector('.btn-submit').addEventListener('click', function(event) {
+            event.preventDefault(); // Chặn việc tự động chuyển trang của thẻ a
+
+            // Lấy dữ liệu từ các ô input
+            const titleData = document.querySelector('.custom-input').value;
+            const contentData = document.querySelector('.custom-textarea').value;
+
+            // Gọi API sửa feedback (Dùng method PUT)
+            fetch('/api/feedback/1', { // Giả sử đang sửa feedback có ID = 1
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Customer-Id': 'CUST_001' // Bắt buộc phải có
+                },
+                body: JSON.stringify({
+                    title: titleData,
+                    content: contentData
+                })
+            })
+                .then(response => {
+                    if(response.ok) {
+                        alert("Đã cập nhật phản hồi thành công!");
+                        window.location.href = "/user-profile"; // Chuyển về trang cá nhân
+                    } else {
+                        alert("Lỗi cập nhật!");
+                    }
+                })
+                .catch(error => console.error('Lỗi:', error));
+        });
+    </script>
+
 </body>
 </html>

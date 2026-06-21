@@ -1,226 +1,101 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thêm Phản Hồi</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    
+
     <style>
-        :root {
-            --primary-blue: #93a5ff; 
-            --primary-blue-hover: #7b91ff;
-            --light-blue-bg: #e6edff;
-            --dark-text: #333333;
-            --gray-text: #888888;
-            --border-color: #e0e0e0;
-            --bg-color: #f9f9f9;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--dark-text);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        /* ----- HEADER CHUNG ----- */
-        .header-container {
-            background-color: white;
-            padding: 0.5rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .header-spacer { width: 120px; }
-
-        .nav-pills .nav-link {
-            color: var(--dark-text);
-            font-weight: 500;
-            border-radius: 0.25rem;
-            padding: 0.5rem 1rem;
-            margin: 0 0.5rem;
-        }
-
-        .nav-pills .nav-link.active {
-            background-color: var(--light-blue-bg);
-            color: #333;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--dark-text);
-            font-weight: 500;
-        }
-
-        .avatar-circle {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.85rem;
-            background-color: #5dade2;
-        }
-
-        /* ----- FORM BÊN TRONG ----- */
-        .form-card {
-            background-color: white;
-            border: 1px solid var(--border-color);
-            border-radius: 0.8rem;
-            padding: 2.5rem;
-            max-width: 800px;
-            margin: 2rem auto; /* Căn giữa màn hình */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-
-        .form-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            color: var(--dark-text);
-        }
-
-        .custom-input {
-            border: 1px solid var(--primary-blue); /* Viền xanh nhẹ như thiết kế */
-            border-radius: 0.5rem;
-            padding: 0.8rem 1rem;
-            background-color: #fbfcff; /* Nền xanh siêu nhạt */
-        }
-        
-        .custom-input:focus {
-            box-shadow: 0 0 0 0.2rem rgba(147, 165, 255, 0.25);
-            border-color: var(--primary-blue-hover);
-        }
-
-        .custom-textarea {
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            padding: 0.8rem 1rem;
-            resize: vertical;
-            min-height: 200px;
-        }
-
-        .custom-textarea:focus {
-            box-shadow: none;
-            border-color: var(--primary-blue);
-        }
-
-        /* Nút hành động dưới form */
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 2rem;
-        }
-
-        .btn-upload {
-            border: 1px solid var(--border-color);
-            color: var(--primary-blue);
-            background-color: white;
-            padding: 0.6rem 1rem;
-            border-radius: 0.4rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        
-        .btn-upload:hover { background-color: var(--light-blue-bg); }
-
-        .btn-cancel {
-            border: 1px solid var(--border-color);
-            color: var(--primary-blue);
-            background-color: white;
-            padding: 0.6rem 1.5rem;
-            border-radius: 0.4rem;
-            font-weight: 500;
-            text-decoration: none; /* Vì dùng thẻ a */
-            transition: all 0.2s;
-        }
-        
-        .btn-cancel:hover { background-color: #f0f0f0; }
-
-        .btn-submit {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 0.6rem 2rem;
-            border-radius: 0.4rem;
-            font-weight: 500;
-            border: none;
-            transition: all 0.2s;
-        }
-        
-        .btn-submit:hover { background-color: var(--primary-blue-hover); }
-
+        :root { --primary-blue: #93a5ff; --primary-blue-hover: #7b91ff; --light-blue-bg: #e6edff; --dark-text: #333333; --border-color: #e0e0e0; --bg-color: #f9f9f9;}
+        body { background-color: var(--bg-color); color: var(--dark-text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;}
+        .header-container { background-color: white; padding: 0.5rem 2rem; display: flex; align-items: center; justify-content: space-between;}
+        .nav-pills .nav-link { color: var(--dark-text); font-weight: 500; border-radius: 0.25rem; padding: 0.5rem 1rem; margin: 0 0.5rem;}
+        .nav-pills .nav-link.active { background-color: var(--light-blue-bg); color: #333;}
+        .avatar-circle { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.85rem; background-color: #5dade2;}
+        .form-card { background-color: white; border: 1px solid var(--border-color); border-radius: 0.8rem; padding: 2.5rem; max-width: 800px; margin: 2rem auto; box-shadow: 0 4px 6px rgba(0,0,0,0.02);}
+        .form-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 2rem; color: var(--dark-text);}
+        .custom-input { border: 1px solid var(--primary-blue); border-radius: 0.5rem; padding: 0.8rem 1rem; background-color: #fbfcff;}
+        .custom-textarea { border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 0.8rem 1rem; resize: vertical; min-height: 200px;}
+        .form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;}
+        .btn-cancel { border: 1px solid var(--border-color); color: var(--primary-blue); background-color: white; padding: 0.6rem 1.5rem; border-radius: 0.4rem; font-weight: 500; text-decoration: none;}
+        .btn-submit { background-color: var(--primary-blue); color: white; padding: 0.6rem 2rem; border-radius: 0.4rem; font-weight: 500; border: none;}
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header class="header-container">
-        <div class="header-spacer"></div>
-        
-        <ul class="nav nav-pills align-items-center">
-            <li class="nav-item">
-                <a class="nav-link active" href="bang-phan-hoi.html">Bảng phân hồi</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Lộ trình sản phẩm</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                    Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
-                </a>
-            </li>
-        </ul>
-
-        <div class="user-profile">
-            <div class="avatar-circle">VT</div>
-            <span>Vũ Tiến</span>
-        </div>
-    </header>
-
-    <!-- NỘI DUNG CHÍNH -->
-    <div class="container-fluid px-4 px-lg-5">
-        
-        <div class="form-card">
-            <h2 class="form-title">Thêm phản hồi</h2>
-            
-            <form>
-                <div class="mb-4">
-                    <input type="text" class="form-control custom-input" placeholder="Tiêu đề phản hồi">
-                </div>
-                
-                <div class="mb-4">
-                    <textarea class="form-control custom-textarea" placeholder="Chi tiết phản hồi"></textarea>
-                </div>
-
-                <div class="form-actions">
-                    <!-- Nút upload ảnh bên trái -->
-                    <button type="button" class="btn-upload">
-                        <i class="bi bi-plus-lg"></i> Tải ảnh lên
-                    </button>
-                    
-                    <!-- Nhóm nút bên phải -->
-                    <div class="d-flex gap-2">
-                        <!-- Chuyển trang: Link Hủy quay về Bảng phản hồi -->
-                        <a href="bang-phan-hoi.html" class="btn-cancel">Hủy</a>
-                        <button type="button" class="btn-submit">Gửi yêu cầu</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
+<header class="header-container">
+    <div style="width: 120px;"></div>
+    <ul class="nav nav-pills align-items-center">
+        <li class="nav-item"><a class="nav-link active" th:href="@{/bang-phan-hoi}">Bảng phản hồi</a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/quan-ly-roadmap}">Lộ trình sản phẩm</a></li>
+    </ul>
+    <div class="d-flex align-items-center gap-2">
+        <div class="avatar-circle">VT</div>
+        <span class="fw-medium">Vũ Tiến</span>
     </div>
+</header>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div class="container-fluid px-4 px-lg-5">
+    <div class="form-card">
+        <h2 class="form-title">Thêm phản hồi</h2>
+
+        <form id="feedbackForm">
+            <div class="mb-4">
+                <input type="text" id="fbTitle" class="form-control custom-input" placeholder="Tiêu đề phản hồi" required>
+            </div>
+
+            <div class="mb-4">
+                <textarea id="fbContent" class="form-control custom-textarea" placeholder="Chi tiết phản hồi" required></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline-primary border"><i class="bi bi-plus-lg"></i> Tải ảnh lên</button>
+
+                <div class="d-flex gap-2">
+                    <a th:href="@{/bang-phan-hoi}" class="btn-cancel">Hủy</a>
+                    <button type="submit" class="btn-submit">Gửi yêu cầu</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Chặn tải lại trang
+
+        // Lấy dữ liệu user nhập
+        const titleData = document.getElementById('fbTitle').value;
+        const contentData = document.getElementById('fbContent').value;
+
+        // Gọi API Backend
+        fetch('/api/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // BẮT BUỘC: Đính kèm Header định danh như dặn dò
+                'X-Customer-Id': 'CUST_001'
+            },
+            body: JSON.stringify({
+                title: titleData,
+                content: contentData
+            })
+        })
+            .then(response => {
+                if(response.ok) {
+                    alert("Đã gửi phản hồi thành công!");
+                    window.location.href = "/bang-phan-hoi"; // Chuyển trang sau khi gửi
+                } else {
+                    alert("Có lỗi xảy ra khi gửi, vui lòng kiểm tra lại API.");
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi:', error);
+                alert("Không thể kết nối tới Server Backend.");
+            });
+    });
+</script>
 </body>
 </html>

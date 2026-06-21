@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -431,20 +431,35 @@
     <!-- Đoạn JS thần thánh để tạo "sức sống" -->
     <script>
         function handleVote(event, buttonElement) {
-            // Ngăn việc click nút bấm kích hoạt thẻ a (nhảy trang)
-            event.preventDefault(); 
-            
-            // Tìm ô hiển thị điểm số chung hàng với nút vừa bấm
-            let cardElement = buttonElement.closest('.feedback-card');
-            let scoreElement = cardElement.querySelector('.vote-count-display');
-            
-            // Đổi màu nút để giả vờ là đã vote
+            event.preventDefault();
+
+            // Nếu nút chưa bị làm xám (chưa vote)
             if(buttonElement.style.backgroundColor !== 'gray'){
-                let currentScore = parseInt(scoreElement.innerText);
-                scoreElement.innerText = currentScore + 1; // Cộng 1 điểm
-                
-                buttonElement.style.backgroundColor = 'gray';
-                buttonElement.innerText = 'Đã vote';
+
+                // Gọi API gửi lượt Vote lên Server
+                fetch('/api/feedback/vote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Customer-Id': 'CUST_001' // Gắn mã định danh người vote
+                    },
+                    body: JSON.stringify({
+                        feedbackId: 1 // Giả sử ID của feedback này
+                    })
+                })
+                    .then(response => {
+                        if(response.ok) {
+                            // Xử lý giao diện: Cộng điểm và làm xám nút
+                            let cardElement = buttonElement.closest('.feedback-card');
+                            let scoreElement = cardElement.querySelector('.vote-count-display');
+                            let currentScore = parseInt(scoreElement.innerText);
+                            scoreElement.innerText = currentScore + 1;
+
+                            buttonElement.style.backgroundColor = 'gray';
+                            buttonElement.innerText = 'Đã vote';
+                        }
+                    })
+                    .catch(error => console.error('Lỗi kết nối API Vote:', error));
             }
         }
 
