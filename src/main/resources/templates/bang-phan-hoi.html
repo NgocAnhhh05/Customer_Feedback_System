@@ -260,13 +260,13 @@
         <ul class="nav nav-pills align-items-center">
             <!-- Thêm tab Quản trị viên (mặc định ẩn bằng style="display: none;") -->
             <li class="nav-item" id="adminTabItem" style="display: none;">
-                <a class="nav-link" href="admin-tong-quan.html">Quản trị viên</a>
+                <a class="nav-link" th:href="@{/admin-tong-quan}">Quản trị viên</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="bang-phan-hoi.html">Bảng phản hồi</a>
+                <a class="nav-link active" th:href="@{/bang-phan-hoi}">Bảng phản hồi</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="quan-ly-roadmap.html">Lộ trình sản phẩm</a>
+                <a class="nav-link" th:href="@{/quan-ly-roadmap}">Lộ trình sản phẩm</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
@@ -275,7 +275,7 @@
             </li>
         </ul>
 
-        <a href="user-profile.html" class="user-profile text-decoration-none">
+        <a th:href="@{/user-profile}" class="user-profile text-decoration-none">
             <div class="avatar-circle avt-blue">VT</div>
             <span>Vũ Tiến</span>
         </a>
@@ -312,7 +312,7 @@
                 </div>
 
                 <!-- CARD 1: Link tới Chi tiết -->
-                <a href="chi-tiet-feedback.html" class="feedback-card-link">
+                <a th:href="@{/chi-tiet-feedback}" class="feedback-card-link">
                     <div class="feedback-card">
                         <div class="card-main-content">
                             <div class="d-flex align-items-center">
@@ -347,7 +347,7 @@
                 </a>
 
                 <!-- CARD 2 -->
-                <a href="chi-tiet-feedback.html" class="feedback-card-link">
+                <a th:href="@{/chi-tiet-feedback}" class="feedback-card-link">
                     <div class="feedback-card">
                         <div class="card-main-content">
                             <div class="d-flex align-items-center">
@@ -379,7 +379,7 @@
                 </a>
 
                 <!-- CARD 3 -->
-                <a href="chi-tiet-feedback.html" class="feedback-card-link">
+                <a th:href="@{/chi-tiet-feedback}" class="feedback-card-link">
                     <div class="feedback-card">
                         <div class="card-main-content">
                             <div class="d-flex align-items-center">
@@ -415,7 +415,7 @@
             <!-- CỘT PHẢI -->
             <div class="col-lg-4 ps-lg-4 mt-4 mt-lg-0">
                 <!-- Nút Viết phản hồi Link tới form -->
-                <a href="them-feedback.html" class="btn-write-feedback w-100 mb-3">
+                <a th:href="@{/them-feedback}" class="btn-write-feedback w-100 mb-3">
                     <i class="bi bi-plus-lg"></i> Viết phản hồi
                 </a>
                 <button class="btn-my-feedback w-100 d-flex justify-content-center align-items-center gap-2">
