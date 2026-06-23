@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor // Tự động tạo Constructor cho các final fields
+@SuppressWarnings("null") //Tắt toàn bộ cảnh báo Null Type Safety cho cả file service
 public class AuthService {
 
     private final UserRepository userRepository;
