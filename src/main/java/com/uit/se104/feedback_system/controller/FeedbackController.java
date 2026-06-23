@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.uit.se104.feedback_system.dto.common.ApiResponse;
 import com.uit.se104.feedback_system.dto.feedback.*;
 import com.uit.se104.feedback_system.entity.enums.*;
 import com.uit.se104.feedback_system.service.FeedbackService;
@@ -28,13 +29,16 @@ public class FeedbackController {
      - POST http://localhost:8080/api/feedbacks
      */
     @PostMapping
-    public ResponseEntity<FeedbackResponse> createFeedback(
+    public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(
         @RequestPart("feedback") @Valid FeedbackCreateRequest request, // Json object feedback
         @RequestPart(value = "files", required = false) MultipartFile[] files, // attached files
         @RequestHeader("X-Customer-Id") String customerId // Chuẩn hóa tên Header
     ){
+
         FeedbackResponse feedback = feedbackService.createFeedback(request, customerId, files);
-        return new ResponseEntity<>(feedback, HttpStatus.CREATED);
+        // Bọc qua vỏ ApiResponse đồng bộ với UI
+        ApiResponse<FeedbackResponse> response = new ApiResponse<>(true, "Gửi phản hồi thành công!", feedback);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     /*
@@ -43,12 +47,13 @@ public class FeedbackController {
      - GET http://localhost:8080/api/feedbacks/history
      */
     @GetMapping("/history")
-    public ResponseEntity<List<FeedbackResponse>> getCustomerHistory(
+    public ResponseEntity<ApiResponse<List<FeedbackResponse>>> getCustomerHistory(
         @RequestHeader("X-Customer-Id") String customerId, // Chuẩn hóa tên Header
         @RequestParam(required = false) FeedbackStatus status
     ){
         List<FeedbackResponse> responses = feedbackService.getCustomerFeedbackHistory(customerId, status);
-        return ResponseEntity.ok(responses);
+        ApiResponse<List<FeedbackResponse>> response = new ApiResponse<>(true, "Tải lịch sử thành công!", responses);
+        return ResponseEntity.ok(response);
     }
 
     /*
