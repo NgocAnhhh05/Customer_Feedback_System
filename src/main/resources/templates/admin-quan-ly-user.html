@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quản Lý Người Dùng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #93a5ff; --light-blue-bg: #e6edff; --dark-text: #333333; --border-color: #e0e0e0; --bg-color: #f9f9f9; }
+        body { background-color: var(--bg-color); font-family: -apple-system, system-ui, sans-serif; }
+        .header-container { background-color: white; padding: 0.5rem 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
+        .nav-pills .nav-link { color: var(--dark-text); font-weight: 500; margin: 0 0.5rem; }
+        .nav-pills .nav-link.active { background-color: var(--light-blue-bg); color: var(--dark-text); }
+        .admin-wrapper { display: flex; min-height: calc(100vh - 60px); }
+        .sidebar { width: 250px; background-color: white; border-right: 1px solid var(--border-color); padding: 2rem 1rem; }
+        .main-content { flex: 1; padding: 2rem 2.5rem; }
+        .sidebar-link { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: #888; text-decoration: none; border-radius: 0.5rem; margin-bottom: 0.5rem; font-weight: 500; }
+        .sidebar-link.active { background-color: var(--light-blue-bg); color: var(--primary-blue); }
+
+        /* ----- USER TABLE ----- */
+        .user-table-card { background-color: white; border-radius: 0.8rem; border: 1px solid var(--border-color); overflow: hidden; }
+        .avatar-md { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        .role-badge { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 0.3rem; font-weight: 600; text-transform: uppercase; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+    </style>
+</head>
+<body>
+    <header class="header-container">
+        <div style="width:120px"></div>
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link active" th:href="@{/admin-tong-quan}">Quản trị viên</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/bang-phan-hoi}">Bảng phản hồi</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/quan-ly-roadmap}">Lộ trình sản phẩm</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Tài nguyên</a></li>
+        </ul>
+        <a th:href="@{/user-profile}" class="text-decoration-none d-flex align-items-center gap-2 text-dark fw-medium">
+            <div style="width:35px; height:35px; background:#5dade2; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center;">VT</div>
+            <span>Vũ Tiến</span>
+        </a>
+    </header>
+
+    <div class="admin-wrapper">
+        <nav class="sidebar">
+            <a th:href="@{/admin-tong-quan}" class="sidebar-link"><i class="bi bi-grid-1x2"></i> Tổng quan</a>
+            <a th:href="@{/admin-quan-ly-feedback}" class="sidebar-link"><i class="bi bi-chat-left-text"></i> Quản lý phản hồi</a>
+            <a th:href="@{/admin-quan-ly-user}" class="sidebar-link active"><i class="bi bi-people"></i> Quản lý người dùng</a>
+        </nav>
+
+        <main class="main-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold m-0">Quản lý người dùng</h4>
+                <button class="btn btn-sm btn-primary" style="background: var(--primary-blue); border:none;"><i class="bi bi-person-plus"></i> Thêm mới</button>
+            </div>
+
+            <div class="row g-3 mb-4 text-center">
+                <div class="col-md-3">
+                    <div class="p-3 bg-white border rounded">
+                        <div class="text-secondary small">Tổng người dùng</div>
+                        <div class="h4 fw-bold mb-0">560</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 bg-white border rounded">
+                        <div class="text-secondary small">Đang hoạt động</div>
+                        <div class="h4 fw-bold mb-0 text-success">542</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 bg-white border rounded">
+                        <div class="text-secondary small">Quản trị viên</div>
+                        <div class="h4 fw-bold mb-0 text-primary">12</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 bg-white border rounded">
+                        <div class="text-secondary small">Chờ xác nhận</div>
+                        <div class="h4 fw-bold mb-0 text-warning">6</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-table-card">
+                <table class="table mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Mã</th>
+                            <th>Người dùng</th>
+                            <th>Vai trò</th>
+                            <th>Trạng thái</th>
+                            <th>Phản hồi</th>
+                            <th>Ngày tham gia</th>
+                            <th class="pe-4 text-end">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-4 text-secondary small">#12345678</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-md bg-info">VT</div>
+                                    <div>
+                                        <div class="fw-bold">Vũ Tiến</div>
+                                        <div class="text-secondary small">tienvu@email.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge" style="background:#d6eaf8; color:#2e86c1;">Quản lý</span></td>
+                            <td><span class="status-dot bg-success"></span> Hoạt động</td>
+                            <td class="ps-4">23</td>
+                            <td class="text-secondary small">12/05/2024</td>
+                            <td class="pe-4 text-end"><button class="btn btn-sm p-0"><i class="bi bi-three-dots-vertical"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4 text-secondary small">#12345679</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-md bg-warning">ND</div>
+                                    <div>
+                                        <div class="fw-bold">Nguyễn Dũng</div>
+                                        <div class="text-secondary small">dungnguyen@email.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge" style="background:#f9ebf2; color:#a569bd;">Điều phối viên</span></td>
+                            <td><span class="status-dot bg-danger"></span> Bị cấm</td>
+                            <td class="ps-4">5</td>
+                            <td class="text-secondary small">05/06/2024</td>
+                            <td class="pe-4 text-end"><button class="btn btn-sm p-0"><i class="bi bi-three-dots-vertical"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4 text-secondary small">#12345680</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-md bg-success">HT</div>
+                                    <div>
+                                        <div class="fw-bold">Hoàng Tuấn</div>
+                                        <div class="text-secondary small">tuanhoang@email.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge" style="background:#fef5e7; color:#d68910;">Người dùng</span></td>
+                            <td><span class="status-dot bg-success"></span> Hoạt động</td>
+                            <td class="ps-4">12</td>
+                            <td class="text-secondary small">20/08/2024</td>
+                            <td class="pe-4 text-end"><button class="btn btn-sm p-0"><i class="bi bi-three-dots-vertical"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. Đồng bộ tên Admin đăng nhập lên Header
+            const savedName = localStorage.getItem("username");
+            if (savedName) {
+                const nameSpan = document.querySelector('.header-container span');
+                if (nameSpan) nameSpan.innerText = savedName;
+            }
+
+            // Hàm thay đổi trạng thái hoạt động của Admin (Bật/Tắt kích hoạt)
+            window.toggleStatus = function(adminId, currentStatus) {
+                const token = localStorage.getItem("accessToken");
+                const nextStatus = !currentStatus; // Đảo ngược trạng thái
+
+                if (confirm(`Bạn có chắc chắn muốn ${nextStatus ? 'Kích hoạt lại' : 'Tạm ngưng'} tài khoản này?`)) {
+                    // Gọi API: PUT /api/users/admins/{adminId}/toggle?active=true/false
+                    fetch(`/api/users/admins/${adminId}/toggle?active=${nextStatus}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    })
+                    .then(response => response.json())
+                    .then(apiResponse => {
+                        if (apiResponse.success) {
+                            alert(apiResponse.message || "Cập nhật trạng thái thành công!");
+                            window.location.reload(); // Tải lại trang để cập nhật UI
+                        } else {
+                            alert("Thất bại: " + apiResponse.message);
+                        }
+                    })
+                    .catch(error => console.error('Lỗi toggle status:', error));
+                }
+            };
+
+            // 2. Gọi API nạp danh sách nhân sự quản trị: GET /api/users/admins
+            const token = localStorage.getItem("accessToken");
+            fetch('/api/users/admins', {
+                method: 'GET',
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(response => response.json())
+            .then(apiResponse => {
+                const tbody = document.querySelector('.table mb-0 tbody, table tbody');
+                if (!tbody) return;
+
+                // Bóc tách mảng AdminResponse[] từ lớp vỏ an toàn .data của ApiResponse
+                if (apiResponse.success && apiResponse.data && apiResponse.data.length > 0) {
+                    tbody.innerHTML = ""; // Xóa dữ liệu tĩnh hardcode mẫu
+                    const admins = apiResponse.data;
+
+                    // Cập nhật thẻ đếm số lượng Quản trị viên trên Dashboard mini
+                    const adminCountBadge = document.querySelector('.text-primary.h4');
+                    if (adminCountBadge) adminCountBadge.innerText = admins.length;
+
+                    // Duyệt qua danh sách nhân sự từ Backend trả về để render động
+                    admins.forEach(admin => {
+                        const isWorking = admin.workingStatus; // Boolean từ DTO
+                        const statusDot = isWorking ? 'bg-success' : 'bg-secondary';
+                        const statusText = isWorking ? 'Hoạt động' : 'Tạm ngưng';
+                        const btnText = isWorking ? 'Tạm ngưng' : 'Kích hoạt';
+                        const btnClass = isWorking ? 'btn-outline-danger' : 'btn-outline-success';
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="ps-4 text-secondary small">#${admin.userId.substring(0,8)}</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar-md bg-info">${admin.name.substring(0,2).toUpperCase()}</div>
+                                        <div>
+                                            <div class="fw-bold">${admin.name}</div>
+                                            <div class="text-secondary small">${admin.email}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="role-badge" style="background:#d6eaf8; color:#2e86c1;">${admin.specialization || 'ADMIN'}</span></td>
+                                <td><span class="status-dot ${statusDot}"></span> ${statusText}</td>
+                                <td class="ps-4">-</td>
+                                <td class="text-secondary small">Hệ thống</td>
+                                <td class="pe-4 text-end">
+                                    <button class="btn btn-sm ${btnClass}" onclick="toggleStatus('${admin.userId}', ${isWorking})">
+                                        ${btnText}
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+            })
+            .catch(error => console.error('Lỗi nạp danh sách nhân sự:', error));
+        });
+    </script>
+</body>
+</html>

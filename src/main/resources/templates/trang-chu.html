@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ - Hệ Thống Phản Hồi</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --brand-blue: #0d6efd; /* Màu xanh đậm nổi bật của trang chủ */
+            --bg-light-blue: #ebf2ff; /* Màu nền form đăng nhập */
+            --dark-text: #111111;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--dark-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ----- HEADER ----- */
+        .landing-header {
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: center; /* Đưa menu ra giữa */
+            align-items: center;
+            position: relative;
+        }
+
+        .center-menu {
+            display: flex;
+            gap: 2rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .center-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+        }
+
+        .center-menu a:hover {
+            color: var(--brand-blue);
+        }
+
+        .right-menu {
+            position: absolute;
+            right: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .btn-brand-primary {
+            background-color: var(--brand-blue);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.4rem;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-brand-primary:hover {
+            background-color: #0b5ed7;
+            color: white;
+        }
+
+        .login-text-link {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* ----- MAIN CONTENT ----- */
+        .hero-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 2rem;
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        /* ----- LOGIN BOX ----- */
+        .login-box {
+            background-color: var(--bg-light-blue);
+            border-radius: 1rem;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+        }
+
+        .login-input {
+            border: none;
+            border-radius: 0.3rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .login-input:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            outline: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="landing-header">
+        <div class="center-menu">
+            <a href="#">Bảng phản hồi</a>
+            <a href="#">Lộ trình sản phẩm</a>
+            <a href="#">Tài nguyên <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg></a>
+        </div>
+        <div class="right-menu">
+            <a href="#" class="login-text-link">Đăng Nhập</a>
+            <!-- LINK TỚI TRANG ĐĂNG KÝ -->
+            <a th:href="@{/dang-ky}" class="btn-brand-primary">Đăng Ký</a>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG -->
+    <div class="container hero-section">
+        <div class="row w-100 align-items-center">
+            
+            <!-- Cột trái: Chữ và nút Bắt đầu -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h1 class="hero-title">Lắng nghe khách hàng, cải thiện sản phẩm</h1>
+                <p class="hero-subtitle">Thu thập những phản hồi quan trọng. Xây dựng những gì người dùng thực sự mong muốn.</p>
+                <!-- LINK TỚI TRANG ĐĂNG KÝ -->
+                <a th:href="@{/dang-ky}" class="btn-brand-primary">Bắt đầu</a>
+            </div>
+
+            <!-- Cột phải: Khung đăng nhập -->
+            <div class="col-lg-6">
+                <div class="login-box">
+                    <form id="loginForm">
+                        <input type="email" class="form-control login-input" placeholder="Email tài khoản" required>
+                        <input type="password" class="form-control login-input" placeholder="Mật khẩu" required>
+                        
+                        <div class="d-flex justify-between align-items-center mt-2">
+                            <a href="#" class="text-secondary text-decoration-none" style="font-size: 0.9rem;">Quên mật khẩu?</a>
+                            <button type="submit" class="btn-brand-primary">Đăng Nhập</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const emailData = document.querySelectorAll('.login-input')[0].value.trim();
+            const passwordData = document.querySelectorAll('.login-input')[1].value;
+            
+            // Gọi API đăng nhập thực tế của Backend
+            fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: emailData,
+                    password: passwordData
+                })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Tài khoản hoặc mật khẩu không chính xác!");
+                return response.json(); 
+            })
+            .then(apiResponse => {
+                // Đăng nhập thành công trả về AuthResponse thô trực tiếp (không bọc success/data theo AuthController)
+                if (apiResponse && apiResponse.accessToken) {
+                    // Lưu thông tin vào bộ nhớ trình duyệt
+                    localStorage.setItem("accessToken", apiResponse.accessToken);
+                    localStorage.setItem("userRole", apiResponse.user.role); // MANAGER, ADMIN, CUSTOMER
+                    localStorage.setItem("username", apiResponse.user.name);
+                    localStorage.setItem("userId", apiResponse.user.userId);
+
+                    // Phân luồng điều hướng dựa theo Role thực tế từ database
+                    if (apiResponse.user.role === "ADMIN" || apiResponse.user.role === "MANAGER") {
+                        localStorage.setItem("adminId", apiResponse.user.userId);
+                        localStorage.setItem("managerId", apiResponse.user.userId);
+                        alert("Đăng nhập diện Quản trị thành công!");
+                        window.location.href = "/admin-tong-quan";
+                    } else {
+                        localStorage.setItem("customerId", apiResponse.user.userId);
+                        alert("Đăng nhập thành công!");
+                        window.location.href = "/bang-phan-hoi";
+                    }
+                } else {
+                    alert("Đăng nhập thất bại, không nhận được token.");
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi kết nối API Đăng nhập:', error);
+                alert(error.message || "Không thể kết nối tới Server Backend. Vui lòng kiểm tra lại Spring Boot.");
+            });
+        });
+</script>
+</div>
+
+</body>
+</html>

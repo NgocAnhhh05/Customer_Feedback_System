@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Feedback</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #93a5ff; 
+            --primary-blue-hover: #7b91ff;
+            --light-blue-bg: #e6edff;
+            --dark-text: #333333;
+            --gray-text: #888888;
+            --border-color: #e0e0e0;
+            --bg-color: #f9f9f9;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* ----- HEADER CHUNG ----- */
+        .header-container {
+            background-color: white;
+            padding: 0.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-spacer { width: 120px; }
+
+        .nav-pills .nav-link {
+            color: var(--dark-text);
+            font-weight: 500;
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+        }
+
+        .nav-pills .nav-link:hover { background-color: #f0f0f0; }
+        .nav-pills .nav-link.active {
+            background-color: var(--light-blue-bg);
+            color: #333;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark-text);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* ----- CỘT TRÁI (Nội dung chính) ----- */
+        .content-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feedback-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-blue-hover);
+            margin-bottom: 0.5rem;
+        }
+
+        .feedback-desc {
+            color: var(--gray-text);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .feedback-image {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* --- Bình luận --- */
+        .comment-section {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        .sort-dropdown {
+            border: 1px solid var(--border-color);
+            border-radius: 0.3rem;
+            padding: 0.3rem 0.8rem;
+            background-color: white;
+            color: var(--gray-text);
+            font-size: 0.9rem;
+        }
+
+        .comment-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .comment-text {
+            margin-left: 45px; /* Thụt lùi so với avatar */
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-actions {
+            margin-left: 45px;
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .action-btn {
+            border: 1px solid var(--border-color);
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.3rem;
+            color: var(--gray-text);
+            cursor: pointer;
+            background: none;
+        }
+        .action-btn:hover { background-color: var(--bg-color); }
+
+        .comment-input-area {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+        }
+
+        .comment-input {
+            border: none;
+            resize: none;
+            outline: none;
+            width: 100%;
+            padding: 0.5rem 0;
+        }
+
+        .btn-send {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 0.3rem;
+            padding: 0.4rem 1rem;
+            font-weight: 500;
+        }
+
+        /* ----- CỘT PHẢI (Thông tin) ----- */
+        .info-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .info-label {
+            width: 100px;
+            color: var(--gray-text);
+            font-size: 0.95rem;
+        }
+
+        .info-value {
+            color: var(--dark-text);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* --- Avatars có màu --- */
+        .avatar-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        
+        .avt-blue { background-color: #5dade2; }
+        .avt-orange { background-color: #eb984e; }
+        .avt-green { background-color: #58d68d; }
+        .avt-purple { background-color: #af7ac5; }
+        .avt-pink { background-color: #f1948a; }
+
+        /* --- Badge trạng thái --- */
+        .status-badge {
+            border: 1px solid var(--border-color);
+            color: var(--gray-text);
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.3rem;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background-color: white;
+        }
+
+        /* Khu vực người bình chọn */
+        .voter-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .show-more-voters {
+            font-size: 0.8rem;
+            color: var(--gray-text);
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER (Liên kết về Bảng phản hồi) -->
+    <header class="header-container mb-4">
+        <div class="header-spacer"></div>
+        
+        <ul class="nav nav-pills align-items-center">
+            <li class="nav-item">
+                <a class="nav-link active" th:href="@{/bang-phan-hoi}">Bảng phản hồi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Lộ trình sản phẩm</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+                </a>
+                <ul class="dropdown-menu shadow-sm" aria-labelledby="taiNguyenDropdown">
+                    <li><a class="dropdown-item" href="#">Tài liệu hướng dẫn</a></li>
+                    <li><a class="dropdown-item" href="#">Chính sách & Quy định</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="dropdown">
+    <div class="user-profile dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+        <div class="avatar-circle avt-blue" id="headerAvatar">VT</div>
+        <span id="headerUsername">Vũ Tiến</span>
+        <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+    </div>
+    <ul class="dropdown-menu dropdown-menu-end shadow-sm border mt-2" aria-labelledby="profileDropdown">
+        <li><a class="dropdown-item py-2" th:href="@{/user-profile}"><i class="bi bi-person me-2"></i> Hồ sơ cá nhân</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><button class="dropdown-item py-2 text-danger" id="btnLogout"><i class="bi bi-box-arrow-right me-2"></i> Đăng xuất</button></li>
+    </ul>
+</div>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <div class="container-fluid px-4 px-lg-5">
+        <!-- Nút Back -->
+        <a th:href="@{/bang-phan-hoi}" class="text-decoration-none text-secondary mb-3 d-inline-block">
+            <i class="bi bi-arrow-left"></i> Quay lại danh sách
+        </a>
+
+        <div class="row">
+            <!-- CỘT TRÁI: Chi tiết & Comment -->
+            <div class="col-lg-8">
+                
+                <div class="content-card">
+                    <h2 class="feedback-title" id="detailTitle">Cần thêm tính năng Dark Mode cho ứng dụng</h2>
+                    <p class="feedback-desc" id="detailDesc">Mình thường xuyên sử dụng ứng dụng vào ban đêm. Việc màn hình luôn hiển thị nền trắng chói lóa làm mình rất mỏi mắt. Hi vọng team phát triển sớm bổ sung giao diện Tối (Dark Mode) để cải thiện trải nghiệm người dùng. Cảm ơn team!</p>
+                    
+                    <!-- Hình ảnh minh họa có màu -->
+                    <img src="https://images.unsplash.com/photo-1555680202-c86f0e12f086?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Minh họa Dark Mode" class="feedback-image">
+                </div>
+
+                <div class="comment-section">
+                    <div class="d-flex justify-content-end mb-4">
+                        <div class="dropdown">
+                            <button class="sort-dropdown dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Mới nhất <i class="bi bi-chevron-down ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Comment Item -->
+                    <div class="comment-item">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="avatar-circle avt-orange">ND</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-medium">Nguyễn Dũng</span>
+                                <span class="text-secondary" style="font-size: 0.8rem;">1 ngày trước</span>
+                            </div>
+                        </div>
+                        <p class="comment-text">Hoàn toàn đồng ý! Tính năng này rất cần thiết cho sức khỏe mắt.</p>
+                        <div class="comment-actions">
+                            <button class="action-btn"><i class="bi bi-heart"></i> 5</button>
+                            <button class="action-btn"><i class="bi bi-reply"></i> Trả lời</button>
+                        </div>
+                    </div>
+
+                    <!-- Input Comment -->
+                    <div class="comment-input-area">
+                        <div class="flex-grow-1">
+                            <textarea class="comment-input" rows="1" placeholder="Viết bình luận..."></textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-light border"><i class="bi bi-image text-secondary"></i></button>
+                            <button class="btn-send">Gửi</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div> <!-- Hết cột trái -->
+
+            <!-- CỘT PHẢI: Thông tin Meta -->
+            <div class="col-lg-4 ps-lg-4 mt-4 mt-lg-0">
+                
+                <div class="info-card">
+                    <div class="info-row">
+                        <div class="info-label">Tác giả</div>
+                        <div class="info-value d-flex align-items-center gap-2">
+                            <div class="avatar-circle avt-blue" style="width: 25px; height: 25px; font-size: 0.7rem;">VT</div>
+                            <span>Vũ Tiến</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">Ngày tạo</div>
+                        <div class="info-value text-secondary">5 tháng trước</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Trạng thái</div>
+                        <div class="info-value">
+                            <div class="status-badge">
+                                <i class="bi bi-arrow-clockwise text-secondary"></i> Đang thực hiện
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Tiến hành</div>
+                        <div class="info-value">Tháng 10/2025</div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <p class="text-secondary mb-3">Người bình chọn (12)</p>
+                    <div class="voter-list">
+                        <div class="avatar-circle avt-green">HT</div>
+                        <div class="avatar-circle avt-purple">LM</div>
+                        <div class="avatar-circle avt-pink">PA</div>
+                        <div class="avatar-circle avt-blue">TQ</div>
+                        <div class="avatar-circle avt-orange">KV</div>
+                        <div class="avatar-circle avt-green">DH</div>
+                    </div>
+                    <div class="show-more-voters mt-2">Hiển thị thêm...</div>
+                </div>
+
+            </div> <!-- Hết cột phải -->
+
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Bắt sự kiện cho nút Gửi Bình luận
+        document.querySelector('.btn-send').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const commentText = document.querySelector('.comment-input').value;
+            if (!commentText.trim()) {
+                alert("Vui lòng nhập nội dung bình luận!");
+                return;
+            }
+
+            fetch('/api/feedback/comment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Customer-Id': 'CUST_001' // Header bắt buộc
+                },
+                body: JSON.stringify({
+                    content: commentText
+                })
+            })
+                .then(response => {
+                    if(response.ok) {
+                        alert("Đã gửi bình luận!");
+                        document.querySelector('.comment-input').value = ""; // Xóa trắng ô nhập sau khi gửi
+                    }
+                })
+                .catch(error => console.error('Lỗi gửi comment:', error));
+        });
+    </script>
+<script>     
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Lấy quyền và tên đã lưu động từ localStorage ra
+    const userRole = localStorage.getItem("userRole") || "CUSTOMER"; 
+    const currentUsername = localStorage.getItem("username") || "Vũ Tiến";
+
+    // 2. Cập nhật tên hiển thị trên Header cho đồng bộ người đăng nhập
+    const profileSpan = document.querySelector('.header-container span, .landing-header span');
+    if(profileSpan) profileSpan.innerText = currentUsername;
+
+    // 3. Tìm và xử lý ẩn hiện nút Quản trị viên trên Header của trang này
+    // Tạo động nút Quản trị viên nếu user là ADMIN/MANAGER để không bao giờ bị mất nút
+    if (userRole === "ADMIN" || userRole === "MANAGER") {
+        const navUl = document.querySelector('.header-container ul.nav');
+        if (navUl && !document.getElementById('adminTabItem')) {
+            const li = document.createElement('li');
+            li.className = 'nav-item';
+            li.id = 'adminTabItem';
+            li.innerHTML = '<a class="nav-link" href="/admin-tong-quan">Quản trị viên</a>';
+            navUl.insertBefore(li, navUl.firstChild); // Đẩy lên đầu menu
+        }
+    }
+});
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+            // 1. ĐỒNG BỘ THÔNG TIN ĐĂNG NHẬP
+            const userRole = localStorage.getItem("userRole") || "CUSTOMER"; 
+            const currentUsername = localStorage.getItem("username") || "Người dùng";
+const headerNameSpan = document.getElementById("headerUsername");
+if (headerNameSpan) headerNameSpan.innerText = currentUsername;
+
+const headerAvtDiv = document.getElementById("headerAvatar");
+if (headerAvtDiv) headerAvtDiv.innerText = currentUsername.substring(0, 2).toUpperCase();
+
+// Thêm sự kiện click nút logout
+const btnLogout = document.getElementById("btnLogout");
+if (btnLogout) {
+    btnLogout.addEventListener("click", function() {
+        if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?")) {
+            localStorage.clear();
+            window.location.href = "/";
+        }
+    });
+}
+
+            // Tự động dựng nút Quản trị viên lên đầu thanh điều hướng nếu có quyền ADMIN/MANAGER
+            if (userRole === "ADMIN" || userRole === "MANAGER") {
+                const navUl = document.querySelector('.header-container ul.nav');
+                if (navUl && !document.getElementById('adminTabItem')) {
+                    const li = document.createElement('li');
+                    li.className = 'nav-item';
+                    li.id = 'adminTabItem';
+                    li.innerHTML = '<a class="nav-link" href="/admin-tong-quan">Quản trị viên</a>';
+                    navUl.insertBefore(li, navUl.firstChild);
+                }
+            }
+
+            // 2. TRÍCH XUẤT ID PHẢN HỒI TỪ URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const feedbackId = urlParams.get('id');
+
+            if (!feedbackId) {
+                alert("Không tìm thấy ID phản hồi hợp lệ!");
+                window.location.href = "/bang-phan-hoi";
+                return;
+            }
+
+            // Găm ID vào biến toàn cục của cửa sổ trình duyệt để hàm click gửi comment có thể đọc được
+            window.currentFeedbackId = feedbackId;
+
+            // Kho dữ liệu dự phòng (Nếu Backend chưa có bản ghi này, dữ liệu mẫu vẫn hiển thị tránh lỗi giao diện)
+            const mockData = {
+                "1": { title: "Cần thêm tính năng Dark Mode cho ứng dụng", desc: "Mình thường xuyên sử dụng ứng dụng vào ban đêm. Việc màn hình luôn hiển thị nền trắng chói lóa làm mình rất mỏi mắt..." },
+                "2": { title: "Lỗi không thể tải ảnh lên ở mục báo cáo", desc: "Hôm qua tôi cố gắng tải một file ảnh định dạng PNG dung lượng khoảng 2MB nhưng hệ thống liên tục báo lỗi kết nối..." },
+                "3": { title: "Cải thiện tốc độ load của trang Lộ trình", desc: "Trang Lộ trình mỗi lần bấm vào phải đợi gần 3 giây mới load xong dữ liệu. Team check lại xem có thể tối ưu được không." }
+            };
+
+            if (mockData[feedbackId]) {
+                document.getElementById('detailTitle').innerText = mockData[feedbackId].title;
+                document.getElementById('detailDesc').innerText = mockData[feedbackId].desc;
+            }
+
+            // 3. TẢI DANH SÁCH BÌNH LUẬN BIỂU MẪU (REPLIES) TỪ BACKEND
+            // Gọi đúng API: GET /api/feedbacks/{feedbackId}/replies
+            fetch(`/api/feedbacks/${feedbackId}/replies`)
+            .then(response => response.json())
+            .then(apiResponse => {
+                const commentSection = document.querySelector('.comment-section');
+                const inputArea = document.querySelector('.comment-input-area');
+                
+                // Đi qua lớp vỏ an toàn .data của ApiResponse để lấy mảng ReplyResponse[]
+                if (apiResponse.success && apiResponse.data) {
+                    const replies = apiResponse.data;
+                    
+                    // Làm sạch các comment tĩnh mặc định trước đó (Giữ lại ô input nhập bình luận ở cuối)
+                    const oldComments = commentSection.querySelectorAll('.comment-item');
+                    oldComments.forEach(item => item.remove());
+
+                    // Duyệt mảng dữ liệu thực tế từ DTO để render động lên giao diện
+                    replies.forEach(reply => {
+                        const commentDiv = document.createElement('div');
+                        commentDiv.className = 'comment-item';
+                        commentDiv.innerHTML = `
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <div class="avatar-circle avt-orange">${reply.adminName ? reply.adminName.substring(0,2).toUpperCase() : 'AD'}</div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="fw-medium">${reply.adminName || 'Quản trị viên'}</span>
+                                    <span class="text-secondary" style="font-size: 0.8rem;">${new Date(reply.createdAt).toLocaleString('vi-VN')}</span>
+                                </div>
+                            </div>
+                            <p class="comment-text">${reply.content}</p>
+                            <div class="comment-actions">
+                                <button class="action-btn"><i class="bi bi-heart"></i> Thích</button>
+                            </div>
+                        `;
+                        // Chèn khối bình luận mới vào trước ô nhập liệu
+                        commentSection.insertBefore(commentDiv, inputArea);
+                    });
+                }
+            })
+            .catch(error => console.error('Lỗi lấy danh sách phản hồi hệ thống:', error));
+        });
+
+        // 4. LẮNG NGHE SỰ KIỆN GỬI CÂU TRẢ LỜI MỚI (REPLY)
+        document.querySelector('.btn-send').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const commentInput = document.querySelector('.comment-input');
+            const commentText = commentInput.value.trim();
+            const feedbackId = window.currentFeedbackId;
+            
+            // Đọc Token bảo mật và mã ID định danh từ máy ra
+            const token = localStorage.getItem("accessToken");
+            const adminId = localStorage.getItem("adminId") || "ADM_9999"; 
+
+            if (!commentText) {
+                alert("Vui lòng nhập nội dung bình luận!");
+                return;
+            }
+
+            // Kiểm soát chặt điều kiện Validation khắt khe @Size(min = 5) của ReplyCreateRequest
+            if (commentText.length < 5) {
+                alert("Nội dung phản hồi hệ thống quá ngắn! Vui lòng viết tối thiểu 5 ký tự.");
+                return;
+            }
+
+            // Gọi đúng API Backend thực tế của ReplyController
+            fetch(`/api/feedbacks/${feedbackId}/replies`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                    'X-Admin-Id': adminId // Header bắt buộc để xác định Admin viết câu trả lời
+                },
+                body: JSON.stringify({
+                    content: commentText // Khớp chính xác thuộc tính của ReplyCreateRequest DTO
+                })
+            })
+            .then(async response => {
+                const result = await response.json();
+                if (!response.ok) {
+                    // Nếu dính lỗi Validation, bóc tách thông tin từ cấu trúc ApiErrorResponse
+                    if (result.errors) {
+                        const errorMessages = Object.values(result.errors).join("\n");
+                        throw new Error(errorMessages);
+                    }
+                    throw new Error(result.message || "Gửi phản hồi hệ thống thất bại.");
+                }
+                return result; // Trả về ApiResponse<ReplyResponse>
+            })
+            .then(apiResponse => {
+                if (apiResponse.success) {
+                    alert(apiResponse.message || "Đã gửi câu trả lời lên hệ thống thành công!");
+                    commentInput.value = ""; // Clear trống khung chữ sau khi gửi
+                    window.location.reload(); // Tải lại trang để cập nhật danh sách hội thoại mới
+                } else {
+                    alert("Thất bại: " + apiResponse.message);
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi gửi dữ liệu lên Reply API:', error);
+                alert(error.message || "Không thể kết nối đến máy chủ Spring Boot.");
+            });
+        });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

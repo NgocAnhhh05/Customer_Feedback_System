@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quản Lý Phản Hồi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root { --primary-blue: #93a5ff; --light-blue-bg: #e6edff; --dark-text: #333333; --border-color: #e0e0e0; --bg-color: #f9f9f9; }
+        body { background-color: var(--bg-color); font-family: -apple-system, system-ui, sans-serif; }
+        .header-container { background-color: white; padding: 0.5rem 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
+        .nav-pills .nav-link { color: var(--dark-text); font-weight: 500; margin: 0 0.5rem; }
+        .nav-pills .nav-link.active { background-color: var(--light-blue-bg); color: var(--dark-text); }
+        .admin-wrapper { display: flex; min-height: calc(100vh - 60px); }
+        .sidebar { width: 250px; background-color: white; border-right: 1px solid var(--border-color); padding: 2rem 1rem; }
+        .main-content { flex: 1; padding: 2rem 2.5rem; }
+        .sidebar-link { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: #888; text-decoration: none; border-radius: 0.5rem; margin-bottom: 0.5rem; font-weight: 500; }
+        .sidebar-link.active { background-color: var(--light-blue-bg); color: var(--primary-blue); }
+        .sidebar-link:hover:not(.active) { background-color: #f8f9fa; }
+
+        /* ----- TABLE STYLES ----- */
+        .table-container { background-color: white; border-radius: 0.8rem; border: 1px solid var(--border-color); overflow: hidden; }
+        .table thead { background-color: #fcfcfc; }
+        .table th { font-weight: 600; color: #666; font-size: 0.85rem; text-transform: uppercase; padding: 1rem; }
+        .table td { vertical-align: middle; padding: 1rem; font-size: 0.9rem; border-bottom: 1px solid #f2f2f2; }
+        
+        .status-pill { padding: 0.25rem 0.6rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 600; }
+        .st-pending { background-color: #ebf5ff; color: #3498db; }
+        .st-progress { background-color: #fef9e7; color: #f1c40f; }
+        .st-done { background-color: #eafaf1; color: #2ecc71; }
+        .st-rejected { background-color: #fdedec; color: #e74c3c; }
+
+        .avatar-sm { width: 28px; height: 28px; border-radius: 50%; background-color: #eee; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: white; }
+    </style>
+</head>
+<body>
+    <header class="header-container">
+        <div style="width:120px"></div>
+        <ul class="nav nav-pills align-items-center">
+            <li class="nav-item"><a class="nav-link active" th:href="@{/admin-tong-quan}">Quản trị viên</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/bang-phan-hoi}">Bảng phản hồi</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/quan-ly-roadmap}">Lộ trình sản phẩm</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="adminResourceDrop" data-bs-toggle="dropdown" aria-expanded="false">
+                    Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+                </a>
+                <ul class="dropdown-menu shadow-sm" aria-labelledby="adminResourceDrop">
+                    <li><a class="dropdown-item" href="#">Báo cáo hệ thống</a></li>
+                </ul>
+            </li>
+        </ul>
+        <a th:href="@{/user-profile}" class="text-decoration-none d-flex align-items-center gap-2 text-dark fw-medium">
+            <div style="width:35px; height:35px; background:#5dade2; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center;">VT</div>
+            <span id="adminHeaderName">Vũ Tiến</span>
+        </a>
+    </header>
+
+    <div class="admin-wrapper">
+        <nav class="sidebar">
+            <a th:href="@{/admin-tong-quan}" class="sidebar-link"><i class="bi bi-grid-1x2"></i> Tổng quan</a>
+            <a th:href="@{/admin-quan-ly-feedback}" class="sidebar-link active"><i class="bi bi-chat-left-text"></i> Quản lý phản hồi</a>
+            <a th:href="@{/admin-quan-ly-user}" class="sidebar-link"><i class="bi bi-people"></i> Quản lý người dùng</a>
+        </nav>
+
+        <main class="main-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold m-0">Quản lý phản hồi</h4>
+                <div class="d-flex gap-2">
+                    <input type="text" class="form-control form-control-sm" placeholder="Tìm phản hồi..." style="width: 250px;">
+                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-funnel"></i></button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Tiêu đề phản hồi</th>
+                            <th>Ngày tạo</th>
+                            <th>Loại</th>
+                            <th>Người gửi</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="fw-bold">Cần thêm tính năng Dark Mode</div>
+                                <div class="text-secondary small text-truncate" style="max-width: 200px;">Giao diện trắng quá chói vào ban đêm...</div>
+                            </td>
+                            <td>20/10/2024</td>
+                            <td><i class="bi bi-lightbulb text-warning"></i> Tính năng</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm" style="background:#5dade2">VT</div>
+                                    <span>Vũ Tiến</span>
+                                </div>
+                            </td>
+                            <td><span class="status-pill st-pending">Đang xem xét</span></td>
+                            <td><button class="btn btn-sm btn-light border"><i class="bi bi-three-dots"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Đồng bộ tên Admin đăng nhập từ bộ nhớ máy
+            const savedName = localStorage.getItem("username");
+            if (savedName) {
+                const nameSpan = document.getElementById("adminHeaderName");
+                if (nameSpan) nameSpan.innerText = savedName;
+            }
+
+            // Gọi API lấy toàn bộ danh sách phản hồi của Admin/Manager thông qua vỏ bọc ApiResponse
+            fetch('/api/feedbacks')
+            .then(response => {
+                if (!response.ok) throw new Error("Không thể tải danh sách phản hồi từ Server.");
+                return response.json();
+            })
+            .then(apiResponse => {
+                const tbody = document.querySelector('.table tbody');
+                if (!tbody) return;
+                
+                // Đồng bộ bóc tách theo lớp vỏ .data của ApiResponse
+                if (!apiResponse.success || !apiResponse.data || apiResponse.data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted p-4">Không có phản hồi nào trong hệ thống.</td></tr>`;
+                    return;
+                }
+                
+                tbody.innerHTML = ""; // Làm sạch dữ liệu mẫu dự phòng
+                const listFeedback = apiResponse.data; 
+                
+                listFeedback.forEach(fb => {
+                    let statusClass = "st-pending";
+                    let statusText = "Đang xem xét";
+                    if(fb.status === "IN_PROGRESS") { statusClass = "st-progress"; statusText = "Đang thực hiện"; }
+                    if(fb.status === "RESOLVED") { statusClass = "st-done"; statusText = "Đã hoàn thành"; }
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>
+                                <div class="fw-bold">${fb.content ? fb.content.split(' - ')[0] : 'Phản hồi'}</div>
+                                <div class="text-secondary small text-truncate" style="max-width: 200px;">${fb.content || ''}</div>
+                            </td>
+                            <td>${fb.createdAt ? new Date(fb.createdAt).toLocaleDateString('vi-VN') : 'N/A'}</td>
+                            <td><i class="bi bi-lightbulb text-warning"></i> ${fb.topic || 'OTHER'}</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm" style="background:#5dade2">${fb.customerName ? fb.customerName.substring(0,2).toUpperCase() : 'KH'}</div>
+                                    <span>${fb.customerName || 'Ẩn danh'}</span>
+                                </div>
+                            </td>
+                            <td><span class="status-pill ${statusClass}">${statusText}</span></td>
+                            <td><a href="/chi-tiet-feedback?id=${fb.feedbackId}" class="btn btn-sm btn-light border"><i class="bi bi-eye"></i></a></td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(error => {
+                console.error('Lỗi tải danh sách feedback:', error);
+                // Giữ lại hàng dữ liệu mẫu nếu kết nối sập để UI không trống trải
+            });
+        });
+    </script>
+</body>
+</html>

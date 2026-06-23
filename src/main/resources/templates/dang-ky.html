@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký - Hệ Thống Phản Hồi</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons cho mấy cái icon nhỏ -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --brand-blue: #0d6efd; 
+            --dark-text: #111111;
+            --input-bg: #f4f5f7;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--dark-text);
+            min-height: 100vh;
+        }
+
+        /* ----- HEADER ----- */
+        .landing-header {
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 4rem;
+        }
+
+        .center-menu {
+            display: flex;
+            gap: 2rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .center-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+        }
+
+        .right-menu {
+            position: absolute;
+            right: 3rem;
+        }
+
+        .login-text-link {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .login-text-link:hover {
+            color: var(--brand-blue);
+        }
+
+        /* ----- NỘI DUNG CHÍNH ----- */
+        .register-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 2rem;
+        }
+
+        .feature-list li {
+            margin-bottom: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .feature-list i {
+            font-size: 1.2rem;
+        }
+
+        /* ----- FORM ĐĂNG KÝ ----- */
+        .form-label {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .reg-input {
+            background-color: var(--input-bg);
+            border: 1px solid transparent;
+            border-radius: 0.3rem;
+            padding: 0.8rem 1rem;
+        }
+
+        .reg-input:focus {
+            background-color: white;
+            border-color: var(--brand-blue);
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .role-section-title {
+            color: #555;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .custom-radio {
+            margin-bottom: 0.8rem;
+        }
+
+        .btn-brand-primary {
+            background-color: var(--brand-blue);
+            color: white;
+            padding: 0.6rem 2rem;
+            border-radius: 0.3rem;
+            font-weight: 500;
+            border: none;
+            margin-top: 2rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-brand-primary:hover {
+            background-color: #0b5ed7;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="landing-header">
+        <div class="center-menu">
+            <a href="#">Bảng phản hồi</a>
+            <a href="#">Lộ trình sản phẩm</a>
+            <a href="#">Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i></a>
+        </div>
+        <div class="right-menu">
+            <!-- LINK QUAY LẠI TRANG CHỦ -->
+            <a th:href="@{/}" class="login-text-link">Đăng Nhập</a>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG -->
+    <div class="container">
+        <div class="row justify-content-between">
+            
+            <!-- Cột trái: Tiêu đề & Icon -->
+            <div class="col-lg-5 mb-5 mb-lg-0">
+                <h1 class="register-title">Đăng ký tại đây</h1>
+                <p class="text-secondary">Nhập email và mật khẩu để truy cập tài khoản của bạn</p>
+                
+                <ul class="feature-list">
+                    <li><i class="bi bi-envelope"></i> Email</li>
+                    <li><i class="bi bi-telephone"></i> Số điện thoại</li>
+                    <li><i class="bi bi-geo-alt"></i> Ghi nhớ đăng nhập</li>
+                </ul>
+            </div>
+
+            <!-- Cột phải: Form nhập liệu -->
+            <div class="col-lg-6">
+                <!-- FORM SUBMIT CHUYỂN TỚI BẢNG PHẢN HỒI -->
+                <form action="/bang-phan-hoi" method="GET">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Email/Số điện thoại</label>
+                            <!-- 2. Thêm id="regEmail" -->
+                            <input type="email" id="regEmail" class="form-control reg-input" placeholder="example@gmail.com" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tên tài khoản</label>
+                            <!-- 3. Thêm id="regName" -->
+                            <input type="text" id="regName" class="form-control reg-input" placeholder="Nhập họ và tên" required>
+                        </div>
+                        
+                        <div class="col-md-6 mt-4">
+                            <label class="form-label">Mật khẩu</label>
+                            <!-- 4. Thêm id="regPassword" -->
+                            <input type="password" id="regPassword" class="form-control reg-input" placeholder="Tối thiểu 6 ký tự" required>
+                        </div>
+                        <div class="col-md-6 mt-4">
+                            <label class="form-label">Nhập lại mật khẩu</label>
+                            <!-- 5. Thêm id="regConfirmPassword" -->
+                            <input type="password" id="regConfirmPassword" class="form-control reg-input" placeholder="Xác nhận mật khẩu" required>
+                        </div>
+                    </div>
+
+                    <div class="role-section-title">Vai trò nào mô tả đúng nhất về bạn?</div>
+                    
+                    <div class="row">
+                        <!-- Cột radio 1 -->
+                        <div class="col-md-6">
+                            <div class="form-check custom-radio">
+                                <input class="form-check-input" type="radio" name="userRole" id="role1" checked>
+                                <label class="form-check-label text-secondary" for="role1">Thành viên nhóm</label>
+                            </div>
+                            <div class="form-check custom-radio">
+                                <input class="form-check-input" type="radio" name="userRole" id="role2">
+                                <label class="form-check-label text-secondary" for="role2">Quản lý</label>
+                            </div>
+                            <div class="form-check custom-radio">
+                                <input class="form-check-input" type="radio" name="userRole" id="role3">
+                                <label class="form-check-label text-secondary" for="role3">Nhà phân tích</label>
+                            </div>
+                        </div>
+                        <!-- Cột radio 2 -->
+                        <div class="col-md-6">
+                            <div class="form-check custom-radio">
+                                <input class="form-check-input" type="radio" name="userRole" id="role4">
+                                <label class="form-check-label text-secondary" for="role4">Thành viên ban điều hành / Lãnh đạo</label>
+                            </div>
+                            <div class="form-check custom-radio">
+                                <input class="form-check-input" type="radio" name="userRole" id="role5">
+                                <label class="form-check-label text-secondary" for="role5">Cố vấn / Tư vấn viên</label>
+                            </div>
+                            <div class="form-check custom-radio">
+                                <input class="form-check-input" type="radio" name="userRole" id="role6">
+                                <label class="form-check-label text-secondary" for="role6">Khác</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-brand-primary">Đăng Ký</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nameValue = document.getElementById('regName').value.trim();
+            const emailValue = document.getElementById('regEmail').value.trim();
+            const passwordValue = document.getElementById('regPassword').value;
+            const confirmPasswordValue = document.getElementById('regConfirmPassword').value;
+
+            if (passwordValue !== confirmPasswordValue) {
+                alert("Mật khẩu nhập lại không trùng khớp!");
+                return;
+            }
+
+            // Gọi API đăng ký thật (Khớp 3 trường của RegisterRequest record)
+            fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: nameValue,
+                    email: emailValue,
+                    password: passwordValue
+                })
+            })
+            .then(async response => {
+                const result = await response.json();
+                if (!response.ok) {
+                    // Nếu dính lỗi Validation, bóc tách thông báo lỗi từ ApiErrorResponse
+                    if (result.errors) {
+                        const errs = Object.values(result.errors).join("\n");
+                        throw new Error(errs);
+                    }
+                    throw new Error(result.message || "Đăng ký không thành công.");
+                }
+                return result; // Trả về ApiResponse<AuthResponse>
+            })
+            .then(apiResponse => {
+                if (apiResponse.success && apiResponse.data) {
+                    const authData = apiResponse.data;
+                    
+                    // Lưu thông tin đăng nhập tự động sau khi đăng ký thành công
+                    localStorage.setItem("accessToken", authData.accessToken);
+                    localStorage.setItem("userRole", authData.user.role);
+                    localStorage.setItem("username", authData.user.name);
+                    localStorage.setItem("customerId", authData.user.userId);
+
+                    alert(apiResponse.message || "Đăng ký tài khoản thành công!");
+                    window.location.href = "/bang-phan-hoi";
+                } else {
+                    alert("Thất bại: " + apiResponse.message);
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi đăng ký:', error);
+                alert(error.message || "Không thể kết nối đến máy chủ.");
+            });
+        });
+</script>
+   
+</body>
+</html>
