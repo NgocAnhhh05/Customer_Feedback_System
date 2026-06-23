@@ -21,6 +21,7 @@ import java.util.UUID;
 Service xử lý viết phản hồi giải trình từ Admin.
  */
 @Service
+@SuppressWarnings("null")
 public class ReplyService {
 
     private final ReplyRepository replyRepository;
