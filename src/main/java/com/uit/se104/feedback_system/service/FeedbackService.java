@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@SuppressWarnings("null")
 public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final UserRepository userRepository;
