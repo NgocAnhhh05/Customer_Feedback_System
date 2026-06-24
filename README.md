@@ -42,15 +42,15 @@ customer-feedback-system/
 
 ## Hướng dẫn khởi chạy ứng dụng
 
-Cài đặt thư viện: Mở cửa sổ Terminal tại thư mục gốc của dự án và chạy lệnh:
+- Cài đặt thư viện: Mở cửa sổ Terminal tại thư mục gốc của dự án và chạy lệnh:
 
 `npm install`
 
-Khởi chạy môi trường phát triển (Dev Server):
+- Khởi chạy môi trường phát triển (Dev Server):
 
 `npm run dev`
-Trải nghiệm ứng dụng: Mở trình duyệt và truy cập đường dẫn được hiển thị trên Terminal:
 
-Địa chỉ Local: `http://localhost:3000`
+- Trải nghiệm ứng dụng: Mở trình duyệt và truy cập đường dẫn được hiển thị trên Terminal:
 
-Địa chỉ Mạng nội bộ (Network): `http://192.168.1.5:3000` (Dùng để test giao diện trực tiếp bằng điện thoại kết nối chung Wi-Fi).
+    + Địa chỉ Local: `http://localhost:3000`
+    + Địa chỉ Mạng nội bộ (Network): `http://192.168.1.5:3000` (Dùng để test giao diện trực tiếp bằng điện thoại kết nối chung Wi-Fi).
