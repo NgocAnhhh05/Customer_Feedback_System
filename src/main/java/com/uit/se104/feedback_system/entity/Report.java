@@ -1,39 +1,33 @@
 package com.uit.se104.feedback_system.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
 import com.uit.se104.feedback_system.entity.enums.ExportType;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "report")
+@Table(name = "reports")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder
-
 public class Report extends BaseEntity {
-
-    @Id
-    @Column(name = "report_id", nullable = false)
-    private String reportId;
 
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "filter_criteria")
-    private String filterCriteria; // Tiêu chí lọc (Dưới dạng JSON string)
+    @Column(name = "start_date", nullable = false)
+    private LocalDateTime startDate;
 
-    @Column(name = "data_summary", columnDefinition = "TEXT")
-    private String dataSummary; // Tóm tắt dữ liệu thống kê
+    @Column(name = "end_date", nullable = false)
+    private LocalDateTime endDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id", nullable = false)
-    private Manager manager;
-
-    @Enumerated(EnumType.STRING)
     @Column(name = "export_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ExportType exportType;
 
+    @Column(name = "file_path")
+    private String filePath;
+
+    @Column(name = "generated_by")
+    private String generatedBy;
 }

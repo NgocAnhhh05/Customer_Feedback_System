@@ -1,16 +1,14 @@
 package com.uit.se104.feedback_system.dto.user;
-import com.uit.se104.feedback_system.entity.enums.AdminSpecialization;
 
-public record AdminResponse(
+import lombok.Getter;
+import lombok.Setter;
 
-        String userId,
-
-        String name,
-
-        String email,
-
-        AdminSpecialization specialization,
-
-        Boolean workingStatus
-
-) {}
+@Getter
+@Setter
+public class AdminResponse {
+    private Long id;
+    private String email;
+    private String name;
+    private String specialization;
+    private boolean isActive;
+}

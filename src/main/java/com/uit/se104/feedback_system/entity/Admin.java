@@ -1,34 +1,23 @@
 package com.uit.se104.feedback_system.entity;
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
 
+import com.uit.se104.feedback_system.entity.enums.AdminSpecialization;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import com.uit.se104.feedback_system.entity.enums.AdminSpecialization;
-
 @Entity
-@Table(name = "admin")
+@Table(name = "admins")
 @PrimaryKeyJoinColumn(name = "user_id")
-@Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder
-
+@Setter
 public class Admin extends User {
-    @Column(name = "specialization")
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private AdminSpecialization specialization;
 
-    @Column(name = "working_status")
-    private boolean workingStatus;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id")
-    private Manager manager;
-
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Reply> listOfSentReply = new ArrayList<>();
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reply> replies = new ArrayList<>();
 }

@@ -1,18 +1,16 @@
 package com.uit.se104.feedback_system.dto.auth;
 
-import com.uit.se104.feedback_system.dto.user.UserResponse;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record AuthResponse(
-    String accessToken,
-    String tokenType,
-    UserResponse user
-) {}
-
-// example:
-// {
-//   "accessToken": "eyJhbGciOiJIUzI1...",
-//   "tokenType": "Bearer",
-//   "user": {
-//       ...
-//   }
-// }
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class AuthResponse {
+    private String token;
+    private String message;
+    private String email;
+}

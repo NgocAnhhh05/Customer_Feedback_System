@@ -3,41 +3,46 @@ package com.uit.se104.feedback_system.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
+import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-/*
- - Service xử lý việc tạo sinh, giải mã và kiểm tra tính hợp lệ của JSON Web Token (JWT).
- - Hỗ trợ duy trì phiên đăng nhập an toàn của người dùng (UC01).
- */
-@Service
+@Component
 public class JwtService {
 
-    @Value("${jwt.secret}")
-    private String secretKey;
+    private static final String SECRET = "9a4f2c8d3b7a1e5f8c2b6d0e4f3a7c1e5b8d2a6c0f4e3b7a1c5d8e2f6b0a4c8d";
 
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
+    public String generateToken(String userName) {
+        Map<String, Object> claims = new HashMap<>();
+        return createToken(claims, userName);
+    }
 
-    private Key getSigningKey() {
-        byte[] keyBytes = io.jsonwebtoken.io.Decoders.BASE64.decode(secretKey);
+    private String createToken(Map<String, Object> claims, String userName) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(userName)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+    }
+
+    private Key getSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-
-    // Lấy tên tài khoản (Email) từ nội dung token
-
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -47,41 +52,18 @@ public class JwtService {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-            .setSigningKey(getSigningKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
-    //Tạo mới token JWT dựa trên thông tin UserDetails
-
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        // Đưa quyền hạn (Role) của user vào token để Frontend phân quyền giao diện
-        claims.put("roles", userDetails.getAuthorities().stream()
-            .map(auth -> auth.getAuthority()).toList());
-
-        return Jwts.builder()
-            .setClaims(claims)
-            .setSubject(userDetails.getUsername()) // Subject là Email của User
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-            .compact();
-    }
-
-    //Kiểm tra xem Token có hợp lệ với tài khoản đăng nhập hay không
-
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
-    private boolean isTokenExpired(String token) {
+    private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

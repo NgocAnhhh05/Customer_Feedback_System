@@ -1,26 +1,24 @@
 package com.uit.se104.feedback_system.dto.common;
 
-public record ApiResponse<T>(
-    boolean success,
-    String message,
-    T data
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-) {}
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ApiResponse<T> {
+    private boolean success;
+    private String message;
+    private T data;
 
-// ex
-// return ResponseEntity.ok(
-//     new ApiResponse<>(
-//         true,
-//         "Feedback created successfully",
-//         feedbackResponse
-//     )
-// );
+    public static <T> ApiResponse<T> success(String message, T data) {
+        return new ApiResponse<>(true, message, data);
+    }
 
-// --> frontend receive
-// {
-//   "success": true,
-//   "message": "Feedback created successfully",
-//   "data": {
-//       ...
-//   }
-// }
+    public static <T> ApiResponse<T> error(String message) {
+        return new ApiResponse<>(false, message, null);
+    }
+}

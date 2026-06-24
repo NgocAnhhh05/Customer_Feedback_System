@@ -1,35 +1,33 @@
 package com.uit.se104.feedback_system.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
 import com.uit.se104.feedback_system.entity.enums.AttachmentType;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Table(name = "attachments")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder
-@Table(name = "attachment")
-
-public class Attachment extends BaseEntity{
-    @Id
-    @Column(name = "attachment_id", nullable = false)
-    private String attachmentId;
+public class Attachment extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feedback_id", nullable = false)
     private Feedback feedback;
 
-    @Column(name = "file_path", nullable = false)
-    private String filePath;
+    @Column(name = "file_name", nullable = false)
+    private String fileName;
+
+    @Column(name = "file_type", nullable = false)
+    private String fileType;
 
     @Column(name = "file_size", nullable = false)
     private Long fileSize;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "file_type", nullable = false)
-    private AttachmentType fileType;
+    @Column(name = "file_url", nullable = false)
+    private String fileUrl;
 
+    @Column(name = "attachment_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AttachmentType attachmentType = AttachmentType.IMAGE;
 }

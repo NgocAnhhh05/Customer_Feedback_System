@@ -1,12 +1,13 @@
 package com.uit.se104.feedback_system.dto.user;
-import com.uit.se104.feedback_system.entity.enums.AdminSpecialization;
 
-// when admin update info
-public record UpdateAdminRequest(
+import lombok.Getter;
+import lombok.Setter;
 
-        String name,
-        AdminSpecialization specialization,
-
-        Boolean workingStatus
-
-) {}
+@Getter
+@Setter
+public class UpdateAdminRequest {
+    private String name;
+    private String specialization;
+    private String phoneNumber;
+    private boolean isActive;
+}

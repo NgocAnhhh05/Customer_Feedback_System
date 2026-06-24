@@ -1,33 +1,28 @@
 package com.uit.se104.feedback_system.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-import java.util.List;
-import java.util.ArrayList;
-
 import com.uit.se104.feedback_system.entity.enums.FeedbackStatus;
 import com.uit.se104.feedback_system.entity.enums.FeedbackTopic;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Setter
+@Table(name = "feedbacks")
 @Getter
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "feedback")
+@Setter
 public class Feedback extends BaseEntity {
-
-    @Id
-    @Column(name = "feedback_id")
-    private String feedbackId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @Column(nullable=false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
+
+    @Column(nullable = false)
+    private Integer rating;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -35,15 +30,11 @@ public class Feedback extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private FeedbackStatus status;
+    private FeedbackStatus status = FeedbackStatus.PENDING;
 
-    @Column(nullable = false)
-    private Integer rating;
-
-    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attachment> attachments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
-
 }
