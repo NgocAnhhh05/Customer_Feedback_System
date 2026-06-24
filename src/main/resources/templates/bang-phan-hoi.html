@@ -272,25 +272,13 @@
                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                     Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
                 </a>
-                <ul class="dropdown-menu shadow-sm" aria-labelledby="taiNguyenDropdown">
-                    <li><a class="dropdown-item" href="#">Tài liệu hướng dẫn</a></li>
-                    <li><a class="dropdown-item" href="#">Chính sách & Quy định</a></li>
-                </ul>
             </li>
         </ul>
 
-        <div class="dropdown">
-    <div class="user-profile dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        <div class="avatar-circle avt-blue" id="headerAvatar">VT</div>
-        <span id="headerUsername">Vũ Tiến</span>
-        <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
-    </div>
-    <ul class="dropdown-menu dropdown-menu-end shadow-sm border mt-2" aria-labelledby="profileDropdown">
-        <li><a class="dropdown-item py-2" th:href="@{/user-profile}"><i class="bi bi-person me-2"></i> Hồ sơ cá nhân</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><button class="dropdown-item py-2 text-danger" id="btnLogout"><i class="bi bi-box-arrow-right me-2"></i> Đăng xuất</button></li>
-    </ul>
-</div>
+        <a th:href="@{/user-profile}" class="user-profile text-decoration-none">
+            <div class="avatar-circle avt-blue">VT</div>
+            <span>Vũ Tiến</span>
+        </a>
     </header>
 
     <!-- 2. MAIN LAYOUT -->
@@ -324,7 +312,7 @@
                 </div>
 
                 <!-- CARD 1: Link tới Chi tiết -->
-                <a th:href="@{/chi-tiet-feedback?id=1}" class="feedback-card-link">
+                <a th:href="@{/chi-tiet-feedback}" class="feedback-card-link">
                     <div class="feedback-card">
                         <div class="card-main-content">
                             <div class="d-flex align-items-center">
@@ -359,7 +347,7 @@
                 </a>
 
                 <!-- CARD 2 -->
-                <a th:href="@{/chi-tiet-feedback?id=2}" class="feedback-card-link">
+                <a th:href="@{/chi-tiet-feedback}" class="feedback-card-link">
                     <div class="feedback-card">
                         <div class="card-main-content">
                             <div class="d-flex align-items-center">
@@ -391,7 +379,7 @@
                 </a>
 
                 <!-- CARD 3 -->
-                <a th:href="@{/chi-tiet-feedback?id=3}" class="feedback-card-link">
+                <a th:href="@{/chi-tiet-feedback}" class="feedback-card-link">
                     <div class="feedback-card">
                         <div class="card-main-content">
                             <div class="d-flex align-items-center">
@@ -430,9 +418,9 @@
                 <a th:href="@{/them-feedback}" class="btn-write-feedback w-100 mb-3">
                     <i class="bi bi-plus-lg"></i> Viết phản hồi
                 </a>
-                <a th:href="@{/user-profile}" class="btn-my-feedback w-100 d-flex justify-content-center align-items-center gap-2">
+                <button class="btn-my-feedback w-100 d-flex justify-content-center align-items-center gap-2">
                     <i class="bi bi-person"></i> Phản hồi của tôi
-                </a>
+                </button>
             </div> 
 
         </div>
@@ -443,95 +431,52 @@
     <!-- Đoạn JS thần thánh để tạo "sức sống" -->
     <script>
         function handleVote(event, buttonElement) {
-            event.preventDefault(); // Ngăn hành động nhảy sang trang chi tiết khi bấm nút con bên trong
-            const token = localStorage.getItem("accessToken");
+            event.preventDefault();
 
+            // Nếu nút chưa bị làm xám (chưa vote)
             if(buttonElement.style.backgroundColor !== 'gray'){
-                buttonElement.style.backgroundColor = 'gray';
-                buttonElement.innerText = 'Đã vote';
 
-                let scoreElement = buttonElement.closest('.feedback-card').querySelector('.vote-count-display');
-                scoreElement.innerText = parseInt(scoreElement.innerText) + 1;
+                // Gọi API gửi lượt Vote lên Server
+                fetch('/api/feedback/vote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Customer-Id': 'CUST_001' // Gắn mã định danh người vote
+                    },
+                    body: JSON.stringify({
+                        feedbackId: 1 // Giả sử ID của feedback này
+                    })
+                })
+                    .then(response => {
+                        if(response.ok) {
+                            // Xử lý giao diện: Cộng điểm và làm xám nút
+                            let cardElement = buttonElement.closest('.feedback-card');
+                            let scoreElement = cardElement.querySelector('.vote-count-display');
+                            let currentScore = parseInt(scoreElement.innerText);
+                            scoreElement.innerText = currentScore + 1;
+
+                            buttonElement.style.backgroundColor = 'gray';
+                            buttonElement.innerText = 'Đã vote';
+                        }
+                    })
+                    .catch(error => console.error('Lỗi kết nối API Vote:', error));
             }
         }
 
+        // JS Giả lập kiểm tra Role để hiện tab Admin
         document.addEventListener("DOMContentLoaded", function() {
-            // 1. Kiểm tra quyền hạn ẩn/hiện nút Quản trị viên
-            const userRole = localStorage.getItem("userRole") || "CUSTOMER"; 
+            // Đổi "ADMIN" thành "CUSTOMER" ở dòng dưới nếu m muốn test thử góc nhìn của khách hàng
+            const userRole = localStorage.getItem("userRole") || "ADMIN"; 
             const adminTab = document.getElementById("adminTabItem");
-            if (adminTab && (userRole === "ADMIN" || userRole === "MANAGER")) {
-                adminTab.style.display = "block";
-            }
 
-            // Đồng bộ tên người dùng lên Header
-            const savedName = localStorage.getItem("username");
-            if (savedName) document.getElementById("headerUsername").innerText = savedName;
-
-            // 2. Nạp danh sách bài đăng động từ API Backend qua vỏ bọc ApiResponse
-            fetch('/api/feedbacks')
-            .then(response => response.json())
-            .then(apiResponse => {
-                // Nhắm trúng vị trí bọc danh sách thẻ trên UI
-                const container = document.querySelector('.col-lg-8');
-                const toolbar = container.querySelector('.d-flex.flex-wrap.gap-3.mb-4');
-                
-                if (apiResponse.success && apiResponse.data && apiResponse.data.length > 0) {
-                    // Xóa bỏ các thẻ card tĩnh mẫu cũ (Giữ lại thanh công cụ lọc ở trên cùng)
-                    const oldCards = container.querySelectorAll('.feedback-card-link');
-                    oldCards.forEach(card => card.remove());
-
-                    // Đổ mảng dữ liệu FeedbackResponse thật ra các khối Card HTML mẫu của bạn
-                    apiResponse.data.forEach(fb => {
-                        let badgeClass = "bi-search";
-                        let statusText = "Đang xem xét";
-                        if(fb.status === "IN_PROGRESS") { badgeClass = "bi-arrow-clockwise"; statusText = "Đang thực hiện"; }
-                        if(fb.status === "RESOLVED") { badgeClass = "bi-check-lg"; statusText = "Đã hoàn thành"; }
-
-                        const cardLink = document.createElement('a');
-                        cardLink.href = `/chi-tiet-feedback?id=${fb.feedbackId}`;
-                        cardLink.className = 'feedback-card-link';
-                        cardLink.innerHTML = `
-                            <div class="feedback-card">
-                                <div class="card-main-content">
-                                    <div class="d-flex align-items-center">
-                                        <h5 class="title-text mb-0">${fb.content ? fb.content.split(' - ')[0] : 'Phản hồi'}</h5>
-                                    </div>
-                                    <p class="desc-text">${fb.content || ''}</p>
-                                    <div class="action-text"><i class="bi bi-chat-square-text"></i> Xem chi tiết cuộc trao đổi</div>
-                                    <div class="d-flex justify-content-between align-items-center border-top pt-3">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="avatar-circle avt-blue">${fb.customerName ? fb.customerName.substring(0,2).toUpperCase() : 'KH'}</div>
-                                            <div>
-                                                <p class="user-name">${fb.customerName || 'Ẩn danh'}</p>
-                                                <p class="post-time mb-0">${fb.createdAt ? new Date(fb.createdAt).toLocaleDateString('vi-VN') : 'Vừa xong'}</p>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <span class="text-secondary"><i class="bi bi-chat-square-text"></i> ${fb.replies ? fb.replies.length : 0}</span>
-                                            <button class="btn-vote-small" onclick="handleVote(event, this)">Bình chọn</button>
-                                            <div class="status-badge"><i class="bi ${badgeClass} text-secondary"></i> ${statusText}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-vote-score vote-count-display">${fb.rating ? fb.rating * 4 : 5}</div>
-                            </div>
-                        `;
-                        container.appendChild(cardLink);
-                    });
+            if (adminTab) {
+                if (userRole === "ADMIN" || userRole === "MANAGER") {
+                    adminTab.style.display = "block"; // Hiện tab lên
+                } else {
+                    adminTab.style.display = "none"; // Giữ nguyên trạng thái ẩn
                 }
-            })
-            .catch(error => console.error('Lỗi đồng bộ danh sách feedback:', error));
+            }
         });
-        const btnLogout = document.getElementById("btnLogout");
-if (btnLogout) {
-    btnLogout.addEventListener("click", function() {
-        if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?")) {
-            localStorage.clear(); // Xóa sạch token, username, role...
-            window.location.href = "/"; // Quay về trang chủ đăng nhập
-        }
-    });
-}
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

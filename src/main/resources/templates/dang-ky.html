@@ -166,28 +166,24 @@
             <!-- Cột phải: Form nhập liệu -->
             <div class="col-lg-6">
                 <!-- FORM SUBMIT CHUYỂN TỚI BẢNG PHẢN HỒI -->
-                <form action="/bang-phan-hoi" method="GET">
+                <form action="bang-phan-hoi.html">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Email/Số điện thoại</label>
-                            <!-- 2. Thêm id="regEmail" -->
-                            <input type="email" id="regEmail" class="form-control reg-input" placeholder="example@gmail.com" required>
+                            <input type="text" class="form-control reg-input" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Tên tài khoản</label>
-                            <!-- 3. Thêm id="regName" -->
-                            <input type="text" id="regName" class="form-control reg-input" placeholder="Nhập họ và tên" required>
+                            <input type="text" class="form-control reg-input" required>
                         </div>
                         
                         <div class="col-md-6 mt-4">
                             <label class="form-label">Mật khẩu</label>
-                            <!-- 4. Thêm id="regPassword" -->
-                            <input type="password" id="regPassword" class="form-control reg-input" placeholder="Tối thiểu 6 ký tự" required>
+                            <input type="password" class="form-control reg-input" required>
                         </div>
                         <div class="col-md-6 mt-4">
                             <label class="form-label">Nhập lại mật khẩu</label>
-                            <!-- 5. Thêm id="regConfirmPassword" -->
-                            <input type="password" id="regConfirmPassword" class="form-control reg-input" placeholder="Xác nhận mật khẩu" required>
+                            <input type="password" class="form-control reg-input" required>
                         </div>
                     </div>
 
@@ -233,64 +229,5 @@
         </div>
     </div>
 
-<script>
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const nameValue = document.getElementById('regName').value.trim();
-            const emailValue = document.getElementById('regEmail').value.trim();
-            const passwordValue = document.getElementById('regPassword').value;
-            const confirmPasswordValue = document.getElementById('regConfirmPassword').value;
-
-            if (passwordValue !== confirmPasswordValue) {
-                alert("Mật khẩu nhập lại không trùng khớp!");
-                return;
-            }
-
-            // Gọi API đăng ký thật (Khớp 3 trường của RegisterRequest record)
-            fetch('/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: nameValue,
-                    email: emailValue,
-                    password: passwordValue
-                })
-            })
-            .then(async response => {
-                const result = await response.json();
-                if (!response.ok) {
-                    // Nếu dính lỗi Validation, bóc tách thông báo lỗi từ ApiErrorResponse
-                    if (result.errors) {
-                        const errs = Object.values(result.errors).join("\n");
-                        throw new Error(errs);
-                    }
-                    throw new Error(result.message || "Đăng ký không thành công.");
-                }
-                return result; // Trả về ApiResponse<AuthResponse>
-            })
-            .then(apiResponse => {
-                if (apiResponse.success && apiResponse.data) {
-                    const authData = apiResponse.data;
-                    
-                    // Lưu thông tin đăng nhập tự động sau khi đăng ký thành công
-                    localStorage.setItem("accessToken", authData.accessToken);
-                    localStorage.setItem("userRole", authData.user.role);
-                    localStorage.setItem("username", authData.user.name);
-                    localStorage.setItem("customerId", authData.user.userId);
-
-                    alert(apiResponse.message || "Đăng ký tài khoản thành công!");
-                    window.location.href = "/bang-phan-hoi";
-                } else {
-                    alert("Thất bại: " + apiResponse.message);
-                }
-            })
-            .catch(error => {
-                console.error('Lỗi đăng ký:', error);
-                alert(error.message || "Không thể kết nối đến máy chủ.");
-            });
-        });
-</script>
-   
 </body>
 </html>

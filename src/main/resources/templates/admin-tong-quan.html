@@ -63,11 +63,6 @@
             <li class="nav-item"><a class="nav-link" th:href="@{/quan-ly-roadmap}">Lộ trình sản phẩm</a></li>
             <li class="nav-item"><a class="nav-link" href="#">Tài nguyên</a></li>
         </ul>
-        <ul class="dropdown-menu" aria-labelledby="adminResource">
-                    <li><a class="dropdown-item" href="#">Báo cáo hệ thống</a></li>
-                </ul>
-            </li>
-        </ul>
         <a th:href="@{/user-profile}" class="user-profile-btn">
             <div class="avatar-circle">VT</div>
             <span>Vũ Tiến</span>
@@ -163,65 +158,5 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // 1. Đồng bộ thông tin tên quản trị viên hiển thị trên Header
-            const savedName = localStorage.getItem("username");
-            if (savedName) {
-                const nameSpan = document.querySelector('.user-profile-btn span');
-                if (nameSpan) nameSpan.innerText = savedName;
-            }
-
-            // 2. Tạo khoảng thời gian tự động: Từ đầu năm đến cuối năm hiện tại (2026)
-            const currentYear = new Date().getFullYear(); // 2026
-            const startDate = `${currentYear}-01-01T00:00:00`;
-            const endDate = `${currentYear}-12-31T23:59:59`;
-            
-            const token = localStorage.getItem("accessToken");
-
-            // 3. Gọi API lấy số liệu phân tích Dashboard: GET /api/reports/analytics
-            fetch(`/api/reports/analytics?startDate=${startDate}&endDate=${endDate}`, {
-                method: 'GET',
-                headers: { 'Authorization': 'Bearer ' + token }
-            })
-            .then(response => {
-                if (!response.ok) throw new Error("Không thể tải số liệu thống kê Dashboard.");
-                return response.json();
-            })
-            .then(apiResponse => {
-                // Đi xuyên qua lớp vỏ ApiResponse để lấy dữ liệu AnalyticsResponse thật
-                if (apiResponse.success && apiResponse.data) {
-                    const stats = apiResponse.data;
-
-                    // Cập nhật 4 thẻ số liệu tổng quan phía trên
-                    const statValues = document.querySelectorAll('.stat-value');
-                    if (statValues.length >= 4) {
-                        statValues[0].innerText = stats.totalFeedbacks || 0; // Tổng phản hồi
-                        statValues[2].innerText = stats.totalFeedbacks ? Math.round(stats.totalFeedbacks * 0.4) : 0; // Giả lập tỷ lệ hoàn thành
-                    }
-
-                    // Cập nhật các thanh biểu đồ Phân loại phản hồi (Feedback By Topic) từ Backend
-                    const topicMap = stats.feedbackByTopic || {};
-                    
-                    // Tính toán tổng số lượng để chia phần trăm thanh biểu đồ
-                    const total = stats.totalFeedbacks || 1; 
-                    
-                    const featureCount = topicMap["FEATURE"] || 0;
-                    const bugCount = topicMap["BUG"] || 0;
-                    const perfCount = topicMap["PERFORMANCE"] || 0;
-                    const otherCount = topicMap["OTHER"] || 0;
-
-                    const fills = document.querySelectorAll('.bar-fill');
-                    if (fills.length >= 4) {
-                        fills[0].style.width = `${(featureCount / total) * 100}%`;
-                        fills[1].style.width = `${(bugCount / total) * 100}%`;
-                        fills[2].style.width = `${(perfCount / total) * 100}%`;
-                        fills[3].style.width = `${(otherCount / total) * 100}%`;
-                    }
-                }
-            })
-            .catch(error => console.error('Lỗi kết nối API Analytics:', error));
-        });
-    </script>
 </body>
 </html>

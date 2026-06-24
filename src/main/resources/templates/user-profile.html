@@ -278,16 +278,12 @@
             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                 Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
             </a>
-            <ul class="dropdown-menu shadow-sm" aria-labelledby="taiNguyenDropdown">
-                <li><a class="dropdown-item" href="#">Tài liệu hướng dẫn</a></li>
-                <li><a class="dropdown-item" href="#">Chính sách & Quy định</a></li>
-            </ul>
         </li>
     </ul>
 
     <a th:href="@{/user-profile}" class="user-profile-btn">
-        <div class="avatar-circle avt-blue" id="headerAvatar"   >VT</div>
-        <span id="headerUsername">Người dùng</span>
+        <div class="avatar-circle avt-blue">VT</div>
+        <span>Vũ Tiến</span>
     </a>
 </header>
 
@@ -296,8 +292,59 @@
 
     <h3 class="section-title">Tài khoản của tôi</h3>
 
-    <div id="myFeedbackContainer">
-        <div class="text-center text-muted p-4">Đang tải lịch sử phản hồi...</div>
+    <div class="profile-card">
+        <div class="profile-info">
+            <div class="profile-avatar-large">VT</div>
+            <div>
+                <h2 class="profile-name">Vũ Tiến</h2>
+                <p class="profile-email">tienvu.design@email.com</p>
+                <span class="post-count-badge">12 bài đăng</span>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <button class="btn-profile btn-edit-profile"><i class="bi bi-pencil"></i> Chỉnh sửa</button>
+            <button class="btn-profile btn-outline-custom"><i class="bi bi-bell"></i> Thông báo</button>
+            <!-- NÚT ĐĂNG XUẤT CHUYỂN VỀ TRANG CHỦ -->
+            <a th:href="@{/}" class="btn-profile btn-outline-custom"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
+        </div>
+    </div>
+
+    <h3 class="section-title"><i class="bi bi-card-text text-primary" style="color: var(--primary-blue) !important;"></i> Phản hồi của tôi</h3>
+
+    <!-- BÀI PHẢN HỒI CỦA USER NÀY -->
+    <div class="feedback-card">
+        <div class="card-main-content">
+            <h5 class="title-text">Cần thêm tính năng Dark Mode cho ứng dụng</h5>
+            <p class="desc-text">Mình thường xuyên sử dụng ứng dụng vào ban đêm. Việc màn hình luôn hiển thị nền trắng chói lóa làm mình rất mỏi mắt...</p>
+
+            <div class="action-text text-end mb-2 text-secondary" style="font-size: 0.75rem;"><i class="bi bi-check2-all"></i> Đã trả lời</div>
+
+            <div class="d-flex justify-content-between align-items-center border-top pt-3 flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="avatar-circle avt-blue" style="width: 28px; height: 28px; font-size: 0.7rem;">VT</div>
+                    <div>
+                        <span class="user-name" style="font-size: 0.85rem;">Vũ Tiến</span>
+                        <span class="text-secondary ms-2" style="font-size: 0.75rem;">5 tháng trước</span>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <!-- NÚT XÓA KÍCH HOẠT JAVASCRIPT -->
+                    <button class="btn-action-small btn-action-red btn-delete-feedback"><i class="bi bi-trash"></i> Xóa</button>
+
+                    <!-- NÚT CHUYỂN QUA MÀN HÌNH SỬA -->
+                    <a th:href="@{/sua-feedback}" class="btn-action-small btn-action-blue"><i class="bi bi-pencil"></i> Chỉnh sửa</a>
+
+                    <span class="text-secondary mx-2"><i class="bi bi-chat-square-text"></i> 5</span>
+                    <button class="btn-vote-filled">Bình chọn</button>
+                    <div class="status-badge">
+                        <i class="bi bi-check-lg text-secondary"></i> Đã hoàn thành
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-vote-score">25</div>
     </div>
 
 </div>
@@ -312,11 +359,10 @@
             event.preventDefault(); // Chặn reload trang
 
             // Hiển thị hộp thoại xác nhận trước khi xóa
-            window.deleteFeedback = function(feedbackId) {
             if(confirm("Bạn có chắc chắn muốn xóa phản hồi này không? Hành động này không thể hoàn tác.")) {
 
                 // Gọi API xóa feedback
-                fetch('/api/feedbacks/1', { // Giả sử phản hồi này có ID = 1
+                fetch('/api/feedback/1', { // Giả sử phản hồi này có ID = 1
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -336,156 +382,8 @@
                         console.error('Lỗi kết nối API:', error);
                         alert("Không thể kết nối tới Server Backend.");
                     });
-                }
             }
-        }); 
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // 1. ĐỒNG BỘ THÔNG TIN USER ĐĂNG NHẬP
-        const userRole = localStorage.getItem("userRole") || "CUSTOMER"; 
-        const currentUsername = localStorage.getItem("username") || "Người dùng";
-        const customerId = localStorage.getItem("customerId") || "CUST_001";
-        const token = localStorage.getItem("accessToken");
-
-        // Đồng bộ hiển thị tên lên giao diện
-        const shortName = currentUsername.substring(0, 2).toUpperCase();
-        // Nhắm trúng mã ID ở header vừa sửa và khối thông tin cá nhân chính
-        if (document.getElementById("headerUsername")) {
-            document.getElementById("headerUsername").innerText = currentUsername;
-        }
-        if (document.getElementById("profileName")) {
-            document.getElementById("profileName").innerText = currentUsername;
-        }
-        
-        // Cập nhật chữ cái viết tắt của Avatar (ví dụ: RO cho root_manager)
-        if (document.getElementById("headerAvatar")) {
-            document.getElementById("headerAvatar").innerText = shortName;
-        }
-        if (document.getElementById("mainAvatar")) {
-            document.getElementById("mainAvatar").innerText = shortName;
-        }
-
-        // Tự động sinh Email hiển thị theo tên tài khoản nếu DB không trả về
-        if (document.getElementById("profileEmail")) {
-            const emailPrefix = currentUsername.toLowerCase().replace(/\s+/g, '');
-            document.getElementById("profileEmail").innerText = `${emailPrefix}@email.com`;
-        }
-        const profileSpan = document.querySelector('.header-container span, .landing-header span');
-        if (profileSpan) profileSpan.innerText = currentUsername;
-
-        // Tự động dựng tab Admin nếu có quyền hạn cao
-        if (userRole === "ADMIN" || userRole === "MANAGER") {
-            const navUl = document.querySelector('.header-container ul.nav');
-            if (navUl && !document.getElementById('adminTabItem')) {
-                const li = document.createElement('li');
-                li.className = 'nav-item';
-                li.id = 'adminTabItem';
-                li.innerHTML = '<a class="nav-link" href="/admin-tong-quan">Quản trị viên</a>';
-                navUl.insertBefore(li, navUl.firstChild);
-            }
-        }
-document.getElementById("btnLogout").addEventListener("click", () => localStorage.clear());
-// Hàm chuyển đổi Enum Topic sang tiếng Việt trực quan
-function translateTopic(topic) {
-            const topicMap = {
-                "PRODUCT_ISSUE": "Lỗi sản phẩm",
-                "SERVICE_QUALITY": "Chất lượng dịch vụ",
-                "DELIVERY_ISSUE": "Vấn đề vận chuyển",
-                "SUGGESTION": "Gợi ý / Đề xuất",
-                "COMPLAINT": "Khiếu nại",
-                "OTHER": "Khác"
-            };
-            return topicMap[topic] || "Khác";
-        }
-        // 2. NẠP DỮ LIỆU ĐỘNG VÀ ĐÓNG DẤU ID BIẾN MẢNG ĐỌC TỪ API BACKEND
-        const feedbackContainer = document.getElementById("myFeedbackContainer");
-        
-        fetch('/api/feedbacks/history', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'X-Customer-Id': customerId
-            }
-        })
-        .then(response => response.json())
-        .then(apiResponse => {
-            // Kiểm tra trạng thái success của vỏ bọc ApiResponse và bóc tách mảng dữ liệu thật từ .data
-            if (apiResponse.success && apiResponse.data && apiResponse.data.length > 0) {
-                feedbackContainer.innerHTML = ""; // Xóa dòng chữ đang tải...
-                const myFeedbacks = apiResponse.data;
-
-                // 🌟 ĐOẠN ĐẶT VÒNG LẶP FOREACH GẮN ID ĐỘNG MÀ BẠN CẦN TÌM:
-                myFeedbacks.forEach(fb => {
-                    let statusText = "Đang xem xét";
-                    let badgeIcon = "bi-search";
-                    if (fb.status === "IN_PROGRESS") { statusText = "Đang thực hiện"; badgeIcon = "bi-arrow-clockwise"; }
-                    if (fb.status === "RESOLVED") { statusText = "Đã hoàn thành"; badgeIcon = "bi-check-lg"; }
-
-                    // Gắn thêm thuộc tính id="fb-card-${fb.feedbackId}" vào thẻ div bọc ngoài cùng của card
-                    feedbackContainer.innerHTML += `
-                        <div class="feedback-card" id="fb-card-${fb.feedbackId}">
-                            <div class="card-main-content">
-                                <h5 class="title-text">${fb.content ? fb.content.split(' - ')[0] : 'Phản hồi'}</h5>
-                                <p class="desc-text">${fb.content || ''}</p>
-                                <div class="d-flex justify-content-between align-items-center border-top pt-3 flex-wrap gap-2">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="avatar-circle avt-blue" style="width: 28px; height: 28px; font-size: 0.7rem;">${shortName}</div>
-                                        <div>
-                                            <span style="font-size: 0.85rem;" class="fw-bold">${currentUsername}</span>
-                                            <span class="text-secondary ms-2" style="font-size: 0.75rem;">${new Date(fb.createdAt).toLocaleDateString('vi-VN')}</span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <button class="btn-action-small btn-action-red" onclick="deleteFeedback('${fb.feedbackId}')"><i class="bi bi-trash"></i> Xóa</button>
-                                        <a href="/sua-feedback?id=${fb.feedbackId}" class="btn-action-small btn-action-blue"><i class="bi bi-pencil"></i> Chỉnh sửa</a>
-                                        <span class="text-secondary mx-2"><i class="bi bi-chat-square-text"></i> ${fb.replies ? fb.replies.length : 0}</span>
-                                        <div class="status-badge">
-                                            <i class="bi ${badgeIcon} text-secondary"></i> ${statusText}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-vote-score">${fb.rating ? fb.rating * 5 : 25}</div>
-                        </div>
-                    `;
-                });
-            } else {
-                feedbackContainer.innerHTML = `<div class="text-center text-muted p-4">Bạn chưa gửi phản hồi nào lên hệ thống.</div>`;
-            }
-        })
-        .catch(error => {
-            console.error('Lỗi tải lịch sử:', error);
-            feedbackContainer.innerHTML = `<div class="text-center text-danger p-4">Không thể kết nối đến máy chủ Backend.</div>`;
         });
-
-        // 3. LOGIC HÀM XÓA ĐỘNG THEO ID DUY NHẤT (WINDOW SCOPE)
-        window.deleteFeedback = function(feedbackId) {
-            if (confirm("Bạn có chắc chắn muốn xóa phản hồi này không? Hành động này không thể hoàn tác.")) {
-                fetch(`/api/feedbacks/${feedbackId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'X-Customer-Id': customerId
-                    }
-                })
-                .then(response => response.json())
-                .then(apiResponse => {
-                    // Đọc thuộc tính .success từ lớp vỏ ApiResponse của Backend trả về
-                    if (apiResponse.success) {
-                        alert(apiResponse.message || "Đã xóa phản hồi thành công!");
-                        
-                        // Tìm chuẩn xác thẻ div có ID tương ứng để xóa ngay khỏi màn hình UI
-                        const cardNode = document.getElementById(`fb-card-${feedbackId}`);
-                        if (cardNode) cardNode.remove(); 
-                    } else {
-                        alert("Xóa thất bại: " + apiResponse.message);
-                    }
-                })
-                .catch(error => console.error('Lỗi kết nối xóa:', error));
-            }
-        };
     });
 </script>
 </body>

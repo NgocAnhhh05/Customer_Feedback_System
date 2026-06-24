@@ -37,22 +37,15 @@
 <body>
     <header class="header-container">
         <div style="width:120px"></div>
-        <ul class="nav nav-pills align-items-center">
+        <ul class="nav nav-pills">
             <li class="nav-item"><a class="nav-link active" th:href="@{/admin-tong-quan}">Quản trị viên</a></li>
-            <li class="nav-item"><a class="nav-link" th:href="@{/bang-phan-hoi}">Bảng phản hồi</a></li>
+            <li class="nav-item"><a class="nav-link" >Bảng phản hồi</a></li>
             <li class="nav-item"><a class="nav-link" th:href="@{/quan-ly-roadmap}">Lộ trình sản phẩm</a></li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="adminResourceDrop" data-bs-toggle="dropdown" aria-expanded="false">
-                    Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
-                </a>
-                <ul class="dropdown-menu shadow-sm" aria-labelledby="adminResourceDrop">
-                    <li><a class="dropdown-item" href="#">Báo cáo hệ thống</a></li>
-                </ul>
-            </li>
+            <li class="nav-item"><a class="nav-link" href="#">Tài nguyên</a></li>
         </ul>
         <a th:href="@{/user-profile}" class="text-decoration-none d-flex align-items-center gap-2 text-dark fw-medium">
             <div style="width:35px; height:35px; background:#5dade2; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center;">VT</div>
-            <span id="adminHeaderName">Vũ Tiến</span>
+            <span>Vũ Tiến</span>
         </a>
     </header>
 
@@ -101,73 +94,59 @@
                             <td><span class="status-pill st-pending">Đang xem xét</span></td>
                             <td><button class="btn btn-sm btn-light border"><i class="bi bi-three-dots"></i></button></td>
                         </tr>
+                        <tr>
+                            <td>
+                                <div class="fw-bold">Lỗi không tải được ảnh PNG</div>
+                                <div class="text-secondary small">Thử nhiều lần nhưng hệ thống báo lỗi...</div>
+                            </td>
+                            <td>18/10/2024</td>
+                            <td><i class="bi bi-bug text-danger"></i> Lỗi/Bug</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm" style="background:#eb984e">ND</div>
+                                    <span>Nguyễn Dũng</span>
+                                </div>
+                            </td>
+                            <td><span class="status-pill st-progress">Đang thực hiện</span></td>
+                            <td><button class="btn btn-sm btn-light border"><i class="bi bi-three-dots"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="fw-bold">Nâng cấp tốc độ load trang Lộ trình</div>
+                                <div class="text-secondary small">Trang load hơi lâu khi có nhiều card...</div>
+                            </td>
+                            <td>15/10/2024</td>
+                            <td><i class="bi bi-speedometer2 text-info"></i> Hiệu suất</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm" style="background:#58d68d">HT</div>
+                                    <span>Hoàng Tuấn</span>
+                                </div>
+                            </td>
+                            <td><span class="status-pill st-done">Đã hoàn thành</span></td>
+                            <td><button class="btn btn-sm btn-light border"><i class="bi bi-three-dots"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="fw-bold">Đổi toàn bộ màu chủ đạo sang hồng</div>
+                                <div class="text-secondary small">Em thích màu hồng ghét sự giả dối...</div>
+                            </td>
+                            <td>10/10/2024</td>
+                            <td><i class="bi bi-brush text-secondary"></i> Khác</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-sm" style="background:#af7ac5">PA</div>
+                                    <span>Phương Anh</span>
+                                </div>
+                            </td>
+                            <td><span class="status-pill st-rejected">Từ chối</span></td>
+                            <td><button class="btn btn-sm btn-light border"><i class="bi bi-three-dots"></i></button></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </main>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Đồng bộ tên Admin đăng nhập từ bộ nhớ máy
-            const savedName = localStorage.getItem("username");
-            if (savedName) {
-                const nameSpan = document.getElementById("adminHeaderName");
-                if (nameSpan) nameSpan.innerText = savedName;
-            }
-
-            // Gọi API lấy toàn bộ danh sách phản hồi của Admin/Manager thông qua vỏ bọc ApiResponse
-            fetch('/api/feedbacks')
-            .then(response => {
-                if (!response.ok) throw new Error("Không thể tải danh sách phản hồi từ Server.");
-                return response.json();
-            })
-            .then(apiResponse => {
-                const tbody = document.querySelector('.table tbody');
-                if (!tbody) return;
-                
-                // Đồng bộ bóc tách theo lớp vỏ .data của ApiResponse
-                if (!apiResponse.success || !apiResponse.data || apiResponse.data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted p-4">Không có phản hồi nào trong hệ thống.</td></tr>`;
-                    return;
-                }
-                
-                tbody.innerHTML = ""; // Làm sạch dữ liệu mẫu dự phòng
-                const listFeedback = apiResponse.data; 
-                
-                listFeedback.forEach(fb => {
-                    let statusClass = "st-pending";
-                    let statusText = "Đang xem xét";
-                    if(fb.status === "IN_PROGRESS") { statusClass = "st-progress"; statusText = "Đang thực hiện"; }
-                    if(fb.status === "RESOLVED") { statusClass = "st-done"; statusText = "Đã hoàn thành"; }
-
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>
-                                <div class="fw-bold">${fb.content ? fb.content.split(' - ')[0] : 'Phản hồi'}</div>
-                                <div class="text-secondary small text-truncate" style="max-width: 200px;">${fb.content || ''}</div>
-                            </td>
-                            <td>${fb.createdAt ? new Date(fb.createdAt).toLocaleDateString('vi-VN') : 'N/A'}</td>
-                            <td><i class="bi bi-lightbulb text-warning"></i> ${fb.topic || 'OTHER'}</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="avatar-sm" style="background:#5dade2">${fb.customerName ? fb.customerName.substring(0,2).toUpperCase() : 'KH'}</div>
-                                    <span>${fb.customerName || 'Ẩn danh'}</span>
-                                </div>
-                            </td>
-                            <td><span class="status-pill ${statusClass}">${statusText}</span></td>
-                            <td><a href="/chi-tiet-feedback?id=${fb.feedbackId}" class="btn btn-sm btn-light border"><i class="bi bi-eye"></i></a></td>
-                        </tr>
-                    `;
-                });
-            })
-            .catch(error => {
-                console.error('Lỗi tải danh sách feedback:', error);
-                // Giữ lại hàng dữ liệu mẫu nếu kết nối sập để UI không trống trải
-            });
-        });
-    </script>
 </body>
 </html>

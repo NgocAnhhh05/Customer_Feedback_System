@@ -206,10 +206,6 @@
                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                     Tài nguyên <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
                 </a>
-                <ul class="dropdown-menu shadow-sm" aria-labelledby="taiNguyenDropdown">
-                    <li><a class="dropdown-item" href="#">Tài liệu hướng dẫn</a></li>
-                    <li><a class="dropdown-item" href="#">Chính sách & Quy định</a></li>
-                </ul>
             </li>
         </ul>
 
@@ -272,7 +268,7 @@
             const contentData = document.querySelector('.custom-textarea').value;
 
             // Gọi API sửa feedback (Dùng method PUT)
-            fetch('/api/feedbacks/1', { // Giả sử đang sửa feedback có ID = 1
+            fetch('/api/feedback/1', { // Giả sử đang sửa feedback có ID = 1
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -294,78 +290,6 @@
                 .catch(error => console.error('Lỗi:', error));
         });
     </script>
-<script>   
-document.addEventListener("DOMContentLoaded", function() {
-            const token = localStorage.getItem("accessToken");
-            const customerId = localStorage.getItem("customerId") || "CUST_001";
 
-            // 1. Trích xuất ID bài viết từ URL thanh địa chỉ trình duyệt
-            const urlParams = new URLSearchParams(window.location.search);
-            const feedbackId = urlParams.get('id');
-
-            if (!feedbackId) {
-                alert("Không tìm thấy mã phản hồi cần chỉnh sửa!");
-                window.location.href = "/user-profile";
-                return;
-            }
-
-            // Găm mã ID vào form để hàm lưu đọc được
-            window.currentEditingId = feedbackId;
-
-            // Đồng bộ tên người đăng nhập lên Header
-            const savedName = localStorage.getItem("username");
-            if (savedName) {
-                const nameSpan = document.querySelector('.header-container span');
-                if (nameSpan) nameSpan.innerText = savedName;
-            }
-
-            // Giả lập điền dữ liệu (Hoặc gọi API chi tiết nếu có endpoint /api/feedbacks/{id})
-            // Ở đây điền sẵn dữ liệu mẫu khớp cấu trúc tách chuỗi "Tiêu đề - Nội dung"
-            const titleInput = document.querySelector('.custom-input');
-            const contentTextarea = document.querySelector('.custom-textarea');
-
-            // 2. Sự kiện khi bấm nút Hoàn tất sửa đổi
-            document.querySelector('.btn-submit').addEventListener('click', function(event) {
-                event.preventDefault(); 
-
-                const updatedTitle = titleInput.value.trim();
-                const updatedContent = contentTextarea.value.trim();
-                const fullMergedContent = updatedTitle + " - " + updatedContent;
-
-                if (fullMergedContent.length < 10) {
-                    alert("Nội dung quá ngắn! Vui lòng nhập tối thiểu 10 ký tự.");
-                    return;
-                }
-
-                // Gọi API cập nhật phản hồi đánh giá của hệ thống (PUT)
-                fetch(`/api/feedbacks/${window.currentEditingId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token,
-                        'X-Customer-Id': customerId
-                    },
-                    body: JSON.stringify({
-                        content: fullMergedContent,
-                        topic: "OTHER",
-                        rating: 5
-                    })
-                })
-                .then(response => response.json())
-                .then(apiResponse => {
-                    if (apiResponse.success) {
-                        alert(apiResponse.message || "Đã cập nhật dữ liệu phản hồi thành công!");
-                        window.location.href = "/user-profile"; 
-                    } else {
-                        alert("Cập nhật thất bại: " + apiResponse.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Lỗi cập nhật API:', error);
-                    alert("Không thể kết nối đến máy chủ Spring Boot.");
-                });
-            });
-        });
-</script>
 </body>
 </html>
