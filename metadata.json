@@ -1,0 +1,6 @@
+{
+  "name": "Customer Feedback System",
+  "description": "A comprehensive customer feedback management system with support for user roles (Customer, Admin, Manager), feedback submission, rating, image attachments, status workflow, and statistical dashboards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
