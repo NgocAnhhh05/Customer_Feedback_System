@@ -1,15 +1,17 @@
 package com.uit.se104.feedback_system.dto.user;
+import com.uit.se104.feedback_system.entity.enums.ManagementLevel;
+import com.uit.se104.feedback_system.entity.enums.ManageDepartment;
 
-import lombok.Getter;
-import lombok.Setter;
+public record ManagerResponse(
 
-@Getter
-@Setter
-public class ManagerResponse {
-    private Long id;
-    private String email;
-    private String name;
-    private String department;
-    private String managementLevel;
-    private boolean isActive;
-}
+        String userId,
+
+        String name,
+
+        String email,
+
+        ManagementLevel managementLevel,
+
+        ManageDepartment manageDepartment
+
+) {}

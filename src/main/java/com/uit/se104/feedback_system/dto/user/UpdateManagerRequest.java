@@ -1,14 +1,14 @@
 package com.uit.se104.feedback_system.dto.user;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.uit.se104.feedback_system.entity.enums.ManagementLevel;
+import com.uit.se104.feedback_system.entity.enums.ManageDepartment;
 
-@Getter
-@Setter
-public class UpdateManagerRequest {
-    private String name;
-    private String department;
-    private String managementLevel;
-    private String phoneNumber;
-    private boolean isActive;
-}
+public record UpdateManagerRequest(
+
+        String name,
+
+        ManagementLevel managementLevel,
+
+        ManageDepartment manageDepartment
+
+) {}

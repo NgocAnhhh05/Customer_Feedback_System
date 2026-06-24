@@ -1,13 +1,20 @@
 package com.uit.se104.feedback_system.dto.report;
 
-import lombok.Getter;
-import lombok.Setter;
-import java.time.LocalDate;
+import com.uit.se104.feedback_system.entity.enums.ExportType;
+import jakarta.validation.constraints.*;
+import java.time.LocalDateTime;
 
-@Getter
-@Setter
-public class ReportRequest {
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String exportType; // EXCEL, PDF, CSV
-}
+public record ReportRequest(
+    @NotBlank(message = "Report title is required")
+    String title,
+
+    @NotNull(message = "Start date filter is required")
+    LocalDateTime startDate,
+
+    @NotNull(message = "End date filter is required")
+    LocalDateTime endDate,
+
+    @NotNull(message = "Export format (Excel/PDF) is required")
+    ExportType exportType
+
+) {}

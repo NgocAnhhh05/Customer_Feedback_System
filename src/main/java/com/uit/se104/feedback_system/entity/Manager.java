@@ -1,23 +1,36 @@
 package com.uit.se104.feedback_system.entity;
-
-import com.uit.se104.feedback_system.entity.enums.ManageDepartment;
-import com.uit.se104.feedback_system.entity.enums.ManagementLevel;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+import com.uit.se104.feedback_system.entity.enums.ManagementLevel;
+import com.uit.se104.feedback_system.entity.enums.ManageDepartment;
 
 @Entity
-@Table(name = "managers")
+@Table(name = "manager")
 @PrimaryKeyJoinColumn(name = "user_id")
-@Getter
 @Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+
 public class Manager extends User {
-
-    @Column(name = "department", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ManageDepartment department;
-
     @Column(name = "management_level", nullable = false)
     @Enumerated(EnumType.STRING)
     private ManagementLevel managementLevel;
+
+    @Column(name = "manage_department", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ManageDepartment manageDepartment;
+
+    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Report> generatedReport = new ArrayList<>();
+
+    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Admin> listOfManagedAdmin = new ArrayList<>();
 }

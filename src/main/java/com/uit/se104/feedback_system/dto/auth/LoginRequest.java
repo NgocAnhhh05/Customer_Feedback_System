@@ -1,15 +1,13 @@
 package com.uit.se104.feedback_system.dto.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class LoginRequest {
-    private String email;
-    private String password;
-}
+public record LoginRequest(
+        @NotBlank(message = "Email cannot be blank")
+        String email,
+
+        @NotBlank(message = "Password cannot be blank")
+        String password
+) {}
+
+

@@ -1,17 +1,22 @@
 package com.uit.se104.feedback_system.dto.feedback;
-
-import lombok.Getter;
-import lombok.Setter;
+import com.uit.se104.feedback_system.dto.reply.ReplyResponse;
+import com.uit.se104.feedback_system.dto.feedback.AttachmentResponse;
+import com.uit.se104.feedback_system.entity.enums.FeedbackStatus;
+import com.uit.se104.feedback_system.entity.enums.FeedbackTopic;
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Getter
-@Setter
-public class FeedbackResponse {
-    private Long id;
-    private String customerName;
-    private String content;
-    private Integer rating;
-    private String topic;
-    private String status;
-    private LocalDateTime createdAt;
+public record FeedbackResponse(
+    String feedbackId,
+    String customerId,
+    String customerName,
+    String content,
+    FeedbackTopic topic,
+    Integer rating,
+    FeedbackStatus status,
+    LocalDateTime createdAt,
+    LocalDateTime updatedAt,
+    List<AttachmentResponse> attachments,
+    List<ReplyResponse> replies
+) {
 }

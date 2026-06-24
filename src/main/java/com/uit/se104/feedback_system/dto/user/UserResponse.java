@@ -1,14 +1,14 @@
 package com.uit.se104.feedback_system.dto.user;
+import com.uit.se104.feedback_system.entity.enums.RoleType;
 
-import lombok.Getter;
-import lombok.Setter;
+// Admin -> AdminResponse
+// Manager -> ManagerResponse
+// Customer -> UserResponse
 
-@Getter
-@Setter
-public class UserResponse {
-    private Long id;
-    private String email;
-    private String name;
-    private String role;
-    private boolean isActive;
+public record UserResponse(
+    String userId,
+    String name,
+    String email,
+    RoleType role
+) {
 }

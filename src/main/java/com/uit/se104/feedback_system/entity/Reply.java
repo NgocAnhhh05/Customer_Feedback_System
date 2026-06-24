@@ -1,18 +1,27 @@
 package com.uit.se104.feedback_system.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "replies")
-@Getter
+@SuperBuilder
 @Setter
-public class Reply extends BaseEntity {
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "reply")
+
+public class Reply extends BaseEntity{
+
+    @Id
+    @Column(name = "reply_id", nullable = false)
+    private String replyId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feedback_id", nullable = false)
     private Feedback feedback;
+    // many replies belong just to 1 feedback
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", nullable = false)
@@ -20,4 +29,5 @@ public class Reply extends BaseEntity {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
+
 }

@@ -1,16 +1,30 @@
 package com.uit.se104.feedback_system.dto.report;
-
-import lombok.Getter;
-import lombok.Setter;
 import java.util.Map;
 
-@Getter
-@Setter
-public class AnalyticsResponse {
-    private long totalFeedbackCount;
-    private long pendingCount;
-    private long resolvedCount;
-    private double averageRating;
-    private Map<Integer, Long> ratingDistribution;
-    private Map<String, Long> topicDistribution;
+public record AnalyticsResponse(
+    long totalFeedbacks,
+    Double averageRating,
+    Map<Integer, Long> ratingDistribution,
+    Map<String, Long> feedbackByTopic
+) {
 }
+
+// example
+// {
+//   "totalFeedback": 500,
+//   "averageRating": 4.3,
+
+//   "ratingDistribution": {
+//     "1": 10,
+//     "2": 20,
+//     "3": 50,
+//     "4": 120,
+//     "5": 300
+//   },
+
+//   "feedbackByTopic": {
+//     "PRODUCT_ISSUE": 100,
+//     "SERVICE_QUALITY": 250,
+//     "DELIVERY_ISSUE": 150
+//   }
+// }
