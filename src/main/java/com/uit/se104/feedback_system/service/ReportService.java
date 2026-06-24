@@ -25,6 +25,7 @@ import java.util.HashMap;
 Service tính toán báo cáo thống kê cho quản trị viên.
 */
 @Service
+@SuppressWarnings("null")
 public class ReportService {
 
     private final FeedbackRepository feedbackRepository;

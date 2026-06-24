@@ -28,8 +28,17 @@ public class CorsConfig {
         config.setAllowedOriginPatterns(Collections.singletonList("*"));
 
         // Cho phép tất cả các Header HTTP gửi lên
-        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization", "X-User-Id"));
-
+        config.setAllowedHeaders(Arrays.asList(
+            "Origin", 
+            "Content-Type", 
+            "Accept", 
+            "Authorization", 
+            "X-User-Id", 
+            "X-Customer-Id", // Thêm dòng này để Frontend không bị chặn CORS khi gọi API
+            "X-Admin-Id",
+            "X-Manager-Id",
+            "Cache-Control"
+        ));
         // Cho phép tất cả các phương thức HTTP (GET, POST, PUT, DELETE, OPTIONS)
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 

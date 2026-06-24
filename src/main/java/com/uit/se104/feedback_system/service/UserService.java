@@ -32,7 +32,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-
+@SuppressWarnings("null")
 public class UserService {
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;

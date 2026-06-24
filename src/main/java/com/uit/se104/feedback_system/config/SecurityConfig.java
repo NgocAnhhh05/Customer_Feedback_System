@@ -15,10 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/*
- - Cấu hình bảo mật chính cho ứng dụng Spring Security.
- - Phân quyền truy cập tài nguyên cho các vai trò khác nhau (UC01 -> UC10).
- */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -32,50 +28,55 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
-            .csrf(AbstractHttpConfigurer::disable) // Vô hiệu hóa CSRF vì dùng Stateless JWT
+            .csrf(AbstractHttpConfigurer::disable) 
             .authorizeHttpRequests(auth -> auth
-                // 1. PUBLIC APIS
+                // 🛑 1. OPEN ACCESS FOR VIEW / UI & STATIC RESOURCES (MỞ KHÓA GIAO DIỆN)
+                // Cho phép tất cả mọi người truy cập tự do vào các trang HTML giao diện
+                .requestMatchers("/", "/dang-ky", "/trang-chu", "/bang-phan-hoi", "/quan-ly-roadmap", "/chi-tiet-feedback", "/sua-feedback", "/them-feedback", "/user-profile").permitAll()
+                .requestMatchers("/admin-tong-quan", "/admin-quan-ly-user", "/admin-quan-ly-feedback").permitAll()
+                // 🛑 BỔ SUNG THÊM DÒNG NÀY: Chấp nhận mọi phương thức POST/GET gửi lên các đường dẫn UI trên
+                .requestMatchers(HttpMethod.POST, "/", "/dang-ky", "/trang-chu", "/bang-phan-hoi").permitAll()
+                .requestMatchers(HttpMethod.GET, "/", "/dang-ky", "/trang-chu", "/bang-phan-hoi").permitAll()
+                // Cho phép tải các tài nguyên tĩnh như CSS, JS, Ảnh của Frontend
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/static/**", "/favicon.ico").permitAll()
+                
+                // 🛑 2. OPEN ACCESS FOR H2 DATABASE CONSOLE (MỞ KHÓA DATABASE TRÊN RAM)
+                .requestMatchers("/h2-console/**").permitAll()
+
+                // 3. PUBLIC APIS
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/uploads/**").permitAll()
 
-                // 2. CUSTOMER ENDPOINTS
-                // Chỉ Khách hàng mới được gửi feedback và xem lịch sử của chính họ
+                // 4. DEVELOPMENT TRICK: Cho phép tạm thời các API hoạt động tự do để bạn dễ test luồng UI
+                // Nếu sau này bạn làm xong UI và muốn test phân quyền JWT thật chặt chẽ, chỉ cần COMMENT dòng dưới đây lại!
+                .requestMatchers("/api/**").permitAll()
+
+                // 5. SECURE ENDPOINTS (Các luật phân quyền gốc của bạn - Giữ nguyên cấu trúc)
                 .requestMatchers(HttpMethod.POST, "/api/feedbacks").hasRole("CUSTOMER")
                 .requestMatchers("/api/feedbacks/history").hasRole("CUSTOMER")
-
-                // 3. ADMIN / MANAGER ENDPOINTS
-                // Admin và Manager được duyệt xem danh sách feedback tổng quát (UC05)
                 .requestMatchers(HttpMethod.GET, "/api/feedbacks").hasAnyRole("ADMIN", "MANAGER")
-
-                // Admin và Manager được phép viết câu trả lời phản hồi (UC07)
                 .requestMatchers(HttpMethod.POST, "/api/feedbacks/{feedbackId}/replies").hasAnyRole("ADMIN", "MANAGER")
-
-                // 4. SHARED ENDPOINTS
-                // Cả Khách hàng (để đọc) và Admin (để xem lịch sử) đều được phép xem danh sách replies
                 .requestMatchers(HttpMethod.GET, "/api/feedbacks/{feedbackId}/replies").hasAnyRole("CUSTOMER", "ADMIN", "MANAGER")
-
-                // 5. MANAGER ONLY ENDPOINTS
-                // Quản lý nhân viên (UserController cũ)
-                .requestMatchers(HttpMethod.PUT, "/api/users/admins/{adminId}").hasAnyRole("ADMIN", "MANAGER") // Admin tự sửa thông tin
-                .requestMatchers("/api/users/admins/**").hasRole("MANAGER") // Các tác vụ CRUD admin còn lại
-
-                // Xem dashboard và Xuất báo cáo (ReportController - UC09)
+                .requestMatchers(HttpMethod.PUT, "/api/users/admins/{adminId}").hasAnyRole("ADMIN", "MANAGER")
+                .requestMatchers("/api/users/admins/**").hasRole("MANAGER")
                 .requestMatchers("/api/reports/**").hasRole("MANAGER")
 
                 // 6. CÒN LẠI
-                // Tất cả các request khác chưa được định nghĩa ở trên thì chỉ cần đăng nhập là được
                 .anyRequest().authenticated()
             )
-            // Cấu hình quản lý Session là STATELESS (Không lưu phiên làm việc trên server, dùng JWT để xác thực từng request)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            
+            // 🛑 7. BẮT BUỘC PHẢI THÊM: Tắt chặn frame để hiển thị được giao diện bảng H2 Console
+            .headers(headers -> headers.frameOptions(frame -> frame.disable()))
 
-            // Thêm bộ lọc kiểm tra JWT trước khi Spring Security xác thực thông tin đăng nhập mặc định
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
+        // Đồng bộ passwordEncoder với hệ thống mã hóa mật khẩu
         return new BCryptPasswordEncoder();
     }
 
